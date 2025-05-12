@@ -10,11 +10,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { ClientRegComponent } from './client-reg/client-reg.component';
+import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
 
 
 @NgModule({
   declarations: [
-    ClientRegComponent
+    ClientRegComponent,
+    EmployeeRegComponent
   ],
 
     imports: [

@@ -1,0 +1,43 @@
+<form [formGroup]="employeeRegForm"  class="example_form" (ngSubmit)="onSubmit()">
+
+  <mat-form-field>
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="Enter first Name" formControlName="firstName"/>
+  </mat-form-field>
+
+  <mat-form-field>
+      <mat-label>Last Name</mat-label>
+      <input matInput placeholder="Enter last Name" formControlName="lastName" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Full Name</mat-label>
+    <input matInput placeholder="Enter full Name" formControlName="fullName" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Age</mat-label>
+    <input matInput placeholder="Enter age" formControlName="age" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="Enter email"  formControlName="email"  />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Phone Number</mat-label>
+    <input matInput placeholder="Enter phone Number"  formControlName="phoneNumber" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Blood Type</mat-label>
+    <input matInput placeholder="Enter Blood Type" formControlName="bloodType"  />
+  </mat-form-field>
+
+  <button type="submit" mat-raised-button>Submit</button>
+
+</form>
+
+
+

@@ -30,6 +30,13 @@ const navigationModel = [
                 icon: 'pi pi-fw pi-home',
                 routerLink: ['/pages/client-reg'],
             },
+            {
+                label: 'Employee Registration',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/employee-reg'],
+            }
         ],
     },
 
