@@ -24,23 +24,6 @@
         </span>
       </mat-form-field>
 
-      <!-- <mat-form-field class="full-width">
-        <mat-label>Service Type</mat-label>
-        <mat-select formControlName="serviceType">
-          <mat-option value="Haircut">Haircut</mat-option>
-          <mat-option value="Coloring">Coloring</mat-option>
-          <mat-option value="Styling">Styling</mat-option>
-          <mat-option value="Treatment">Treatment</mat-option>
-        </mat-select>
-        <span class="text-danger"
-          *ngIf="(stylistTaskManagementForm.get('serviceType')?.touched || submitted) && stylistTaskManagementForm.get('serviceType')?.errors?.['required']">
-          Service Type is required
-        </span>
-      </mat-form-field> -->
-
-
-
-
       <mat-form-field class="full-width">
         <mat-label>Date</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="date">

@@ -16,9 +16,6 @@ export class ClientRegServiceService {
     private httpService: HttpService
   ) {}
 
-  /**
-   * Submits form data to the backend (POST request)
-   */
   serviceCall(formDetails: any) {
     const requestUrl = `${environment.baseUrl}/client-reg`;
 
@@ -32,9 +29,6 @@ export class ClientRegServiceService {
     return this.http.post(requestUrl, formDetails, { headers });
   }
 
-  /**
-   * Fetches all client data from backend (GET request)
-   */
   getData() {
     const requestUrl = `${environment.baseUrl}/client-reg`;
 

@@ -24,8 +24,7 @@ export class ClientRegComponent implements OnInit {
   selectedData: any;
   isButtonDisabled = false;
   submitted = false;
-  //Validation :we make a variable to check if the input field is submitted w/o entering data. Check (<span> at html file to see how submitted is used)
-  //after submitting the form, status should change to true. check (OnSubmit at this file)
+ 
   constructor(
     private fb: FormBuilder,
     private clientRegService: ClientRegServiceService,
@@ -34,13 +33,11 @@ export class ClientRegComponent implements OnInit {
   {
     this.clientRegForm = this.fb.group({
       firstName: new FormControl('', [Validators.required]),
-      //Input field validations.1st step. Next Step at : client-reg.component.html(check <span> line).3rd Step : client-reg.component.ts (ngOnsubmit)
       lastName: new FormControl('', [Validators.minLength(3), Validators.maxLength(8)]),
       email: new FormControl('', [Validators.email]),
       phoneNumber: new FormControl('', [Validators.required])
     });
 
-    // Default fallback data
     this.dataSource = new MatTableDataSource([
       { firstName: 'John', lastName: 'Doe', email: 'john@example.com', phoneNumber: '1234567890' }
     ]);
@@ -76,9 +73,6 @@ export class ClientRegComponent implements OnInit {
       console.log(this.clientRegForm.value);
 
       this.submitted = true;
-      //Validation. see how submitted has become true after submitting
-
-      //Validation 3rd step (below)
       if(this.clientRegForm.invalid){
         return;
       }
@@ -86,23 +80,23 @@ export class ClientRegComponent implements OnInit {
       if (this.mode === 'add') {
         this.clientRegService.serviceCall(this.clientRegForm.value).subscribe(response => {
           console.log('server response:', response);
-          this.populateData(); // refresh after add
+          this.populateData(); 
           this.messageService.showSuccess('Data added successfully!');
         });
       } else if (this.mode === 'edit') {
         this.clientRegService.editData(this.selectedData.id, this.clientRegForm.value).subscribe(response => {
           console.log('server response for edit:', response);
-          this.populateData(); // refresh after edit
+          this.populateData(); 
           this.messageService.showSuccess('Data edited successfully!');
         });
       }
   
       this.mode = 'add';
-      this.clientRegForm.disable(); // disables the form after submission
+      this.clientRegForm.disable(); 
       this.isButtonDisabled = true;
     } catch (error) {
       this.messageService.showError('Action failed with error' + error);
-      //1st Step. Next step -> message-service.service.ts
+   
   }
 }
   
@@ -110,7 +104,7 @@ export class ClientRegComponent implements OnInit {
   public resetData(): void {
     this.clientRegForm.reset();
     this.clientRegForm.enable();
-    this.isButtonDisabled = false; // re-enable the Save button
+    this.isButtonDisabled = false; 
   }
 
   public editData(data: any): void {
@@ -118,7 +112,7 @@ export class ClientRegComponent implements OnInit {
     this.clientRegForm.enable();
     this.mode = 'edit';
     this.selectedData = data;
-    this.isButtonDisabled = false; // allow saving after edit
+    this.isButtonDisabled = false;
   }
 
   public deleteData(data: any): void {

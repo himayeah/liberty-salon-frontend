@@ -57,6 +57,13 @@ const navigationModel = [
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-fw pi-home',
                 routerLink: ['/pages/stylist-task-management'],
+            },
+             {
+                label: 'Inventory',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/inventory'],
             }
         ],
     },

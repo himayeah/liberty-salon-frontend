@@ -1,0 +1,151 @@
+<div class="container">
+  <div class="form-section">
+
+    <form [formGroup]="inventoryForm" (ngSubmit)="onSubmit()" class="example-form">
+
+      <mat-form-field class="full-width">
+        <mat-label>Product Name</mat-label>
+        <input matInput formControlName="productName" />
+        <span class="text-danger" *ngIf="(inventoryForm.get('productName')?.touched || submitted) && inventoryForm.get('productName')?.errors?.['required']">
+          Product Name is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Product Category</mat-label>
+        <mat-select formControlName="productCategory">
+          <mat-option value="Hair Shampoo">Hair Shampoo</mat-option>
+          <mat-option value="Hair Conditioner">Hair Conditioner</mat-option>
+        </mat-select>
+        <span class="text-danger" *ngIf="(inventoryForm.get('productCategory')?.touched || submitted) && inventoryForm.get('productCategory')?.errors?.['required']">
+          Product Category is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Supplier</mat-label>
+        <mat-select formControlName="supplier">
+          <mat-option value="Supplier A">Supplier A</mat-option>
+          <mat-option value="Supplier B">Supplier B</mat-option>
+        </mat-select>
+        <span class="text-danger" *ngIf="(inventoryForm.get('supplier')?.touched || submitted) && inventoryForm.get('supplier')?.errors?.['required']">
+          Supplier is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Quantity in Stock</mat-label>
+        <input matInput formControlName="productQty" type="number" />
+        <span class="text-danger" *ngIf="(inventoryForm.get('productQty')?.touched || submitted) && inventoryForm.get('productQty')?.errors?.['required']">
+          Quantity is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Purchase Price</mat-label>
+        <input matInput formControlName="purchasePrice" type="number" />
+        <span class="text-danger" *ngIf="(inventoryForm.get('purchasePrice')?.touched || submitted) && inventoryForm.get('purchasePrice')?.errors?.['required']">
+          Purchase Price is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Selling Price</mat-label>
+        <input matInput formControlName="sellingPrice" type="number" />
+        <span class="text-danger" *ngIf="(inventoryForm.get('sellingPrice')?.touched || submitted) && inventoryForm.get('sellingPrice')?.errors?.['required']">
+          Selling Price is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Expiry Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="expiryDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <span class="text-danger" *ngIf="(inventoryForm.get('expiryDate')?.touched || submitted) && inventoryForm.get('expiryDate')?.errors?.['required']">
+          Expiry Date is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Product Status</mat-label>
+        <mat-select formControlName="productStatus">
+          <mat-option value="Available">Available</mat-option>
+          <mat-option value="Unavailable">Unavailable</mat-option>
+        </mat-select>
+        <span class="text-danger" *ngIf="(inventoryForm.get('productStatus')?.touched || submitted) && inventoryForm.get('productStatus')?.errors?.['required']">
+          Product Status is required
+        </span>
+      </mat-form-field>
+
+      <button type="submit" mat-raised-button color="primary" class="form-button" [disabled]="isButtonDisabled">Save</button>
+      <button type="button" mat-raised-button color="accent" class="form-button" (click)="resetForm()">Reset</button>
+    </form>
+
+  </div>
+
+  <div class="table-section">
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef>Product Name</th>
+        <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="productCategory">
+        <th mat-header-cell *matHeaderCellDef>Product Category</th>
+        <td mat-cell *matCellDef="let element"> {{element.productCategory}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="supplier">
+        <th mat-header-cell *matHeaderCellDef>Supplier</th>
+        <td mat-cell *matCellDef="let element"> {{element.supplier}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="productQty">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let element"> {{element.productQty}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="purchasePrice">
+        <th mat-header-cell *matHeaderCellDef>Purchase Price</th>
+        <td mat-cell *matCellDef="let element"> {{element.purchasePrice}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sellingPrice">
+        <th mat-header-cell *matHeaderCellDef>Selling Price</th>
+        <td mat-cell *matCellDef="let element"> {{element.sellingPrice}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expiryDate">
+        <th mat-header-cell *matHeaderCellDef>Expiry Date</th>
+        <td mat-cell *matCellDef="let element"> {{element.expiryDate | date: 'yyyy/MM/dd'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="productStatus">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element"> {{element.productStatus}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" (click)="editData(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteData(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+  </div>
+</div>
