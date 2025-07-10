@@ -106,6 +106,8 @@ export class AppointmentScheduleComponent implements OnInit {
   public editData(data: any): void {
     this.appointmentScheduleForm.patchValue(data);
     this.appointmentScheduleForm.enable();
+    console.log('Editing data:', data);
+    
     this.mode = 'edit';
     this.selectedData = data;
     this.isButtonDisabled = false;

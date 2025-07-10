@@ -15,7 +15,7 @@ export class StylistTaskManagementServiceService {
 
 
   serviceCall(formDetails: any) {
-    const requestUrl = `${environment.baseUrl}/stylist-task-management`;
+    const requestUrl = `${environment.baseUrl}/add-stylist-task`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -28,7 +28,7 @@ export class StylistTaskManagementServiceService {
   }
 
   getData() {
-    const requestUrl = `${environment.baseUrl}/stylist-task-management`;
+    const requestUrl = `${environment.baseUrl}/get-stylist-tasks`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -46,7 +46,7 @@ export class StylistTaskManagementServiceService {
   editData(id: number, formDetails: any) {
     console.log('In Edit Data');
 
-    const requestUrl = `${environment.baseUrl}/stylist-task-management/${id}`;
+    const requestUrl = `${environment.baseUrl}/edit-stylist-task/${id}`;
 
     let headers: any = {};
 
@@ -62,7 +62,7 @@ export class StylistTaskManagementServiceService {
   deleteData(id: number) {
     console.log('In Delete Data');
 
-    const requestUrl = `${environment.baseUrl}/stylist-task-management/${id}`;
+    const requestUrl = `${environment.baseUrl}/delete-stylist-task/${id}`;
 
     let headers: any = {};
 
