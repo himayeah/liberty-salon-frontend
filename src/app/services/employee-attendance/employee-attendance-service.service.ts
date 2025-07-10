@@ -6,10 +6,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ClientRegServiceService {
-  deleteclient(client: any) {
-    throw new Error('Method not implemented.');
-  }
+export class EmployeeAttendanceService {
 
   constructor(
     private http: HttpClient,
@@ -17,10 +14,10 @@ export class ClientRegServiceService {
   ) {}
 
   /**
-   * Submits form data to the backend (POST request)
+   * Submits attendance form data to backend (POST request)
    */
   serviceCall(formDetails: any) {
-    const requestUrl = `${environment.baseUrl}/client-reg`;
+    const requestUrl = `${environment.baseUrl}/employee-attendance`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -33,10 +30,10 @@ export class ClientRegServiceService {
   }
 
   /**
-   * Fetches all client data from backend (GET request)
+   * Fetches all attendance records from backend (GET request)
    */
   getData() {
-    const requestUrl = `${environment.baseUrl}/client-reg`;
+    const requestUrl = `${environment.baseUrl}/employee-attendance`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -48,34 +45,40 @@ export class ClientRegServiceService {
     return this.http.get(requestUrl, { headers });
   }
 
-  editData(id: number, form_details:any){
+  /**
+   * Edits a specific attendance record using its ID (PUT request)
+   */
+  editData(id: number, form_details: any) {
     console.log('In Edit Data');
 
-    const requestUrl = environment.baseUrl + '/client-reg/'+ id.toString();
+    const requestUrl = `${environment.baseUrl}/employee-attendance/${id}`;
 
-    let headers = {};
+    let headers: any = {};
 
-    if (this.httpService.getAuthToken()! == null){
+    if (this.httpService.getAuthToken() != null) {
       headers = {
         Authorization: 'Bearer ' + this.httpService.getAuthToken()
       };
-    }  
-    return this.http.put(requestUrl, form_details, {headers: headers});
+    }
+    return this.http.put(requestUrl, form_details, { headers });
   }
 
-  deleteData(id: number){
-    console.log('In Edit Data');
+  /**
+   * Deletes a specific attendance record using its ID (DELETE request)
+   */
+  deleteData(id: number) {
+    console.log('In Delete Data');
 
-    const requestUrl = environment.baseUrl + '/client-reg/'+ id.toString();
+    const requestUrl = `${environment.baseUrl}/employee-attendance/${id}`;
 
-    let headers = {};
+    let headers: any = {};
 
-    if (this.httpService.getAuthToken()! == null){
+    if (this.httpService.getAuthToken() != null) {
       headers = {
         Authorization: 'Bearer ' + this.httpService.getAuthToken()
       };
-    }  
-    return this.http.delete(requestUrl, {headers: headers});
+    }
+    return this.http.delete(requestUrl, { headers });
   }
 
 }

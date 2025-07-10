@@ -4,7 +4,6 @@ import { NotfoundComponent } from './demo/components/notfound/notfound.component
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { AuthGuard } from './guards/auth.guard';
 
-
 const routes: Routes = [
     //{ path: 'pages/form-demo', component: FormDemoComponent } // Check this line
   ];

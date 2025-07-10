@@ -1,0 +1,143 @@
+<div class="container">
+  <div class="form-section">
+    <form [formGroup]="stylistTaskManagementForm" (ngSubmit)="onSubmit()" class="example-form">
+
+      <mat-form-field class="full-width">
+        <mat-label>Stylist Name</mat-label>
+        <input matInput formControlName="stylistName" />
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('stylistName')?.touched || submitted) && stylistTaskManagementForm.get('stylistName')?.errors?.['required']">
+          Stylist Name is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width"appearance="fill">
+        <mat-label>Service Type</mat-label>
+        <mat-select formControlName="serviceType">
+          <mat-option *ngFor="let service of serviceTypes" [value]="service">
+            {{ service }}
+          </mat-option>
+        </mat-select>
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('serviceType')?.touched || submitted) && stylistTaskManagementForm.get('serviceType')?.errors?.['required']">
+          Service Type is required
+        </span>
+      </mat-form-field>
+
+      <!-- <mat-form-field class="full-width">
+        <mat-label>Service Type</mat-label>
+        <mat-select formControlName="serviceType">
+          <mat-option value="Haircut">Haircut</mat-option>
+          <mat-option value="Coloring">Coloring</mat-option>
+          <mat-option value="Styling">Styling</mat-option>
+          <mat-option value="Treatment">Treatment</mat-option>
+        </mat-select>
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('serviceType')?.touched || submitted) && stylistTaskManagementForm.get('serviceType')?.errors?.['required']">
+          Service Type is required
+        </span>
+      </mat-form-field> -->
+
+
+
+
+      <mat-form-field class="full-width">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('date')?.touched || submitted) && stylistTaskManagementForm.get('date')?.errors?.['required']">
+          Date is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Start Time</mat-label>
+        <input matInput formControlName="startTime" placeholder="e.g., 10:30 AM" />
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('startTime')?.touched || submitted) && stylistTaskManagementForm.get('startTime')?.errors?.['required']">
+          Start Time is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>End Time</mat-label>
+        <input matInput formControlName="endTime" placeholder="e.g., 12:30 PM" />
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('endTime')?.touched || submitted) && stylistTaskManagementForm.get('endTime')?.errors?.['required']">
+          End Time is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Task Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let service of serviceTypes" [value]="serviceStatus">
+            {{ serviceStatus }}
+          </mat-option>
+        </mat-select>
+        <span class="text-danger"
+          *ngIf="(stylistTaskManagementForm.get('status')?.touched || submitted) && stylistTaskManagementForm.get('status')?.errors?.['required']">
+          Service Status is required
+        </span>
+      </mat-form-field>
+
+      <button type="submit" mat-raised-button color="primary" class="form-button">Save</button>
+      <button type="button" mat-raised-button color="accent" class="form-button" (click)="resetForm()">Reset</button>
+
+    </form>
+  </div>
+
+  <div class="table-section">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="stylistName">
+        <th mat-header-cell *matHeaderCellDef> Stylist Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.stylistName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="serviceType">
+        <th mat-header-cell *matHeaderCellDef> Service Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.serviceType}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.date | date:'shortDate'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef> Start Time </th>
+        <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef> End Time </th>
+        <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Task Status </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="edit">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

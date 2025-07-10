@@ -29,19 +29,35 @@ export class EmployeeRegServicesService {
     return this.http.post(requestUrl, form_details, { headers });
   }
 
-  // serviceCall(form_details: any) {
-  //   console.log('In the service');
+  //getData()function
+  getData(){
+    
+    const requestUrl = environment.baseUrl + '/employee_reg_form';
+    //environement.baseURL means the port Backend is listening at
 
-  //   const requestUrl = environment.baseUrl + '/employee_reg_form';
-  //   let headers = {};
+    let headers = {};
 
-  //   if (this.httpService.getAuthToken() !== null) {
-  //     headers = {
-  //       Authorization: 'Bearer ' + this.httpService.getAuthToken()
-  //     };
-  //   }
+    if (this.httpService.getAuthToken() !==null){
+      headers={
+        Authorization: 'Bearer' + this.httpService.getAuthToken()
+      };
+    }
+    return this.http.get(requestUrl, headers);
+  }
 
-  //   return this.http.post(requestUrl, form_details, { headers: headers });
-  // }
+ deleteData(id: number) {
+  const requestUrl = `${environment.baseUrl}/employee_reg_form/${id}`;
+
+  let headers: any = {};
+  const token = this.httpService.getAuthToken();
+  if (token !== null) {
+    headers = {
+      Authorization: 'Bearer ' + token
+    };
+  }
+
+  return this.http.delete(requestUrl, { headers });
+}
+
 }
 

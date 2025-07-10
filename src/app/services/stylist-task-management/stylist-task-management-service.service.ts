@@ -6,21 +6,16 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ClientRegServiceService {
-  deleteclient(client: any) {
-    throw new Error('Method not implemented.');
-  }
+export class StylistTaskManagementServiceService {
 
   constructor(
     private http: HttpClient,
     private httpService: HttpService
   ) {}
 
-  /**
-   * Submits form data to the backend (POST request)
-   */
+
   serviceCall(formDetails: any) {
-    const requestUrl = `${environment.baseUrl}/client-reg`;
+    const requestUrl = `${environment.baseUrl}/stylist-task-management`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -32,11 +27,8 @@ export class ClientRegServiceService {
     return this.http.post(requestUrl, formDetails, { headers });
   }
 
-  /**
-   * Fetches all client data from backend (GET request)
-   */
   getData() {
-    const requestUrl = `${environment.baseUrl}/client-reg`;
+    const requestUrl = `${environment.baseUrl}/stylist-task-management`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -48,34 +40,38 @@ export class ClientRegServiceService {
     return this.http.get(requestUrl, { headers });
   }
 
-  editData(id: number, form_details:any){
+  /**
+   * Edit stylist task (PUT)
+   */
+  editData(id: number, formDetails: any) {
     console.log('In Edit Data');
 
-    const requestUrl = environment.baseUrl + '/client-reg/'+ id.toString();
+    const requestUrl = `${environment.baseUrl}/stylist-task-management/${id}`;
 
-    let headers = {};
+    let headers: any = {};
 
-    if (this.httpService.getAuthToken()! == null){
+    if (this.httpService.getAuthToken() != null) {
       headers = {
         Authorization: 'Bearer ' + this.httpService.getAuthToken()
       };
-    }  
-    return this.http.put(requestUrl, form_details, {headers: headers});
+    }
+
+    return this.http.put(requestUrl, formDetails, { headers });
   }
 
-  deleteData(id: number){
-    console.log('In Edit Data');
+  deleteData(id: number) {
+    console.log('In Delete Data');
 
-    const requestUrl = environment.baseUrl + '/client-reg/'+ id.toString();
+    const requestUrl = `${environment.baseUrl}/stylist-task-management/${id}`;
 
-    let headers = {};
+    let headers: any = {};
 
-    if (this.httpService.getAuthToken()! == null){
+    if (this.httpService.getAuthToken() != null) {
       headers = {
         Authorization: 'Bearer ' + this.httpService.getAuthToken()
       };
-    }  
-    return this.http.delete(requestUrl, {headers: headers});
-  }
+    }
 
+    return this.http.delete(requestUrl, { headers });
+  }
 }

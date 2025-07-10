@@ -10,13 +10,22 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { ClientRegComponent } from './client-reg/client-reg.component';
-import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
-
+import {EmployeeRegComponent} from './employee-reg/employee-reg.component';
+import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {EmployeeAttendanceComponent} from './employee-attendance/employee-attendance.component';
+import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
+import { MatSelect } from '@angular/material/select';
 
 @NgModule({
   declarations: [
     ClientRegComponent,
-    EmployeeRegComponent
+    EmployeeRegComponent,
+    AppointmentScheduleComponent,
+    EmployeeAttendanceComponent,
+    AppointmentScheduleComponent,
+    StylistTaskManagementComponent
   ],
 
     imports: [
@@ -29,7 +38,11 @@ import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
       MatButtonModule,
       MatTableModule,
       MatPaginatorModule,
-      MatIconModule
-    ]
+      MatIconModule,
+      MatDatepickerModule,
+      MatNativeDateModule,
+      MatSelect
+    ],
+    providers: [MatDatepickerModule]
   })
   export class PagesModule { }

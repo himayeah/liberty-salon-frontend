@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="form-section">
+    <form [formGroup]="appointmentScheduleForm" (ngSubmit)="onSubmit()" class="example-form">
+
+      <mat-form-field class="full-width">
+        <mat-label>Service Name</mat-label>
+        <input matInput formControlName="serviceName" />
+        <span class="text-danger" *ngIf="(appointmentScheduleForm.get('serviceName').touched || submitted) && appointmentScheduleForm.get('serviceName').errors?.['required']">
+          Service Name is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Service Description</mat-label>
+        <input matInput formControlName="serviceDescription" />
+        <span class="text-danger" *ngIf="(appointmentScheduleForm.get('serviceDescription').touched || submitted) && appointmentScheduleForm.get('serviceDescription').errors?.['required']">
+          Description is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="serviceDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <span class="text-danger" *ngIf="(appointmentScheduleForm.get('serviceDate').touched || submitted) && appointmentScheduleForm.get('serviceDate').errors?.['required']">
+          Date is required
+        </span>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Time</mat-label>
+        <input matInput formControlName="serviceTime" placeholder="e.g., 10:30 AM" />
+        <span class="text-danger" *ngIf="(appointmentScheduleForm.get('serviceTime').touched || submitted) && appointmentScheduleForm.get('serviceTime').errors?.['required']">
+          Time is required
+        </span>
+      </mat-form-field>
+
+      <button type="submit" mat-raised-button color="primary" class="form-button" [disabled]="isButtonDisabled">Save</button>
+      <button type="button" mat-raised-button color="accent" class="form-button" (click)="resetData()">Reset</button>
+    </form>
+  </div>
+
+  <div class="table-section">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <!-- Service Name Column -->
+      <ng-container matColumnDef="serviceName">
+        <th mat-header-cell *matHeaderCellDef>Service Name</th>
+        <td mat-cell *matCellDef="let element">{{element.serviceName}}</td>
+      </ng-container>
+
+      <!-- Service Description Column -->
+      <ng-container matColumnDef="serviceDescription">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element">{{element.serviceDescription}}</td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="serviceDate">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{element.serviceDate}}</td>
+      </ng-container>
+
+      <!-- Time Column -->
+      <ng-container matColumnDef="serviceTime">
+        <th mat-header-cell *matHeaderCellDef>Time</th>
+        <td mat-cell *matCellDef="let element">{{element.serviceTime}}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" (click)="editData(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteData(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of appointments"></mat-paginator>
+  </div>
+</div>
+
+

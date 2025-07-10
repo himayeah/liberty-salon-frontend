@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .form-section,
+  .table-section {
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .form-section {
+    border-right: 1px solid #ccc;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+
+  .form-button{
+    margin-right: 1%;
+  }
