@@ -83,6 +83,9 @@ export class StylistTaskManagementComponent implements OnInit {
 
   resetForm(): void {
     this.stylistTaskManagementForm.reset();
+    this.stylistTaskManagementForm.setErrors = null;
+    this.stylistTaskManagementForm.updateValueAndValidity();
+    this.stylistTaskManagementForm.enable();
     this.mode = 'add';
     this.selectedData = null;
     this.submitted = false;
@@ -95,6 +98,7 @@ export class StylistTaskManagementComponent implements OnInit {
       date: data.date,
       startTime: data.startTime,
       endTime: data.endTime,
+      serviceStatus :data.serviceStatus,
     });
     this.selectedData = data;
     this.mode = 'edit';
