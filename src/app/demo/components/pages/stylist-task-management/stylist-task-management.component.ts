@@ -12,7 +12,7 @@ import { MessageServiceService } from 'src/app/services/message-service/message-
 })
 export class StylistTaskManagementComponent implements OnInit {
   stylistTaskManagementForm: FormGroup;
-  displayedColumns: string[] = ['stylistName', 'serviceType', 'date', 'startTime', 'endTime','status', 'actions'];
+  displayedColumns: string[] = ['stylistName', 'serviceType', 'date', 'startTime', 'endTime','serviceStatus', 'actions'];
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -21,7 +21,7 @@ export class StylistTaskManagementComponent implements OnInit {
   selectedData: any;
   submitted = false;
   serviceTypes: string[] = ['Haircut', 'Coloring', 'Styling', 'Treatment'];
-  // serviceStatus: string[] = ['Started', 'Ongoing', 'Finished'];
+  serviceStatus: string[] = ['Scheduled', 'In-Progress', 'Completed', 'Cancelled'];
 
   constructor(
     private fb: FormBuilder,
@@ -34,7 +34,7 @@ export class StylistTaskManagementComponent implements OnInit {
       date: ['', Validators.required],
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
-      status: ['', Validators.required],
+      serviceStatus: ['', Validators.required],
     });
   }
 
