@@ -29,11 +29,9 @@ export class EmployeeRegServicesService {
     return this.http.post(requestUrl, form_details, { headers });
   }
 
-  //getData()function
   getData(){
     
     const requestUrl = environment.baseUrl + '/employee_reg_form';
-    //environement.baseURL means the port Backend is listening at
 
     let headers = {};
 
@@ -44,6 +42,22 @@ export class EmployeeRegServicesService {
     }
     return this.http.get(requestUrl, headers);
   }
+
+  editData(id: number, form_details:any){
+      console.log('In Edit Data');
+  
+      const requestUrl = environment.baseUrl + '/employee_reg_form'+ id.toString();
+  
+      let headers = {};
+  
+      if (this.httpService.getAuthToken()! == null){
+        headers = {
+          Authorization: 'Bearer ' + this.httpService.getAuthToken()
+        };
+      }  
+      return this.http.put(requestUrl, form_details, {headers: headers});
+    }
+
 
  deleteData(id: number) {
   const requestUrl = `${environment.baseUrl}/employee_reg_form/${id}`;

@@ -44,7 +44,7 @@ import { InventoryComponent } from './inventory/inventory.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelect,
-    MatOption
+    MatOption,
 ],
     providers: [MatDatepickerModule]
   })

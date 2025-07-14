@@ -34,7 +34,6 @@ export class AppointmentScheduleComponent implements OnInit {
       serviceTime: new FormControl('', [Validators.required]),
     });
 
-    // Default fallback data
     this.dataSource = new MatTableDataSource([
       { serviceName: 'Consultation', serviceDescription: 'Initial consult', serviceDate: '2025-07-01', serviceTime: '10:00 AM' }
     ]);
@@ -76,13 +75,13 @@ export class AppointmentScheduleComponent implements OnInit {
       if (this.mode === 'add') {
         this.appointmentScheduleService.serviceCall(this.appointmentScheduleForm.value).subscribe(response => {
           console.log('server response:', response);
-          this.populateData(); // refresh list
+          this.populateData(); 
           this.messageService.showSuccess('Appointment added successfully!');
         });
       } else if (this.mode === 'edit') {
         this.appointmentScheduleService.editData(this.selectedData.id, this.appointmentScheduleForm.value).subscribe(response => {
           console.log('server response for edit:', response);
-          this.populateData(); // refresh list
+          this.populateData(); 
           this.messageService.showSuccess('Appointment updated successfully!');
         });
       }

@@ -17,7 +17,7 @@ export class AppointmentSchedulingServiceService {
   serviceCall(form_details: any): Observable<any> {
     console.log("In the service");
 
-    const requestUrl = environment.baseUrl + '/appointment_scheduling_form';
+    const requestUrl = environment.baseUrl + '/appointment_schedule_form';
 
     let headers = new HttpHeaders();
 
@@ -29,11 +29,10 @@ export class AppointmentSchedulingServiceService {
     return this.http.post(requestUrl, form_details, { headers });
   }
 
-  //getData()function
+
   getData() {
 
-    const requestUrl = environment.baseUrl + '/appointment_scheduling_form';
-    //environement.baseURL means the port Backend is listening at
+    const requestUrl = environment.baseUrl + '/appointment_schedule_form';
 
     let headers = {};
 
@@ -46,7 +45,7 @@ export class AppointmentSchedulingServiceService {
   }
 
   deleteData(id: number) {
-    const requestUrl = `${environment.baseUrl}/appointment_scheduling_form/${id}`;
+    const requestUrl = `${environment.baseUrl}+/appointment_schedule_form/${id}`;
 
     let headers: any = {};
     const token = this.httpService.getAuthToken();
@@ -62,7 +61,7 @@ export class AppointmentSchedulingServiceService {
   editData(id: number, form_details: any) {
     console.log('In Edit Data');
 
-    const requestUrl = environment.baseUrl + '/appointment_scheduling_form/' + id.toString();
+    const requestUrl = environment.baseUrl + '/appointment_schedule_form/' + id.toString();
 
     let headers = {};
 
