@@ -1,9 +1,23 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+    FormBuilder,
+    FormGroup,
+    FormControl,
+    AbstractControl,
+} from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { Validators } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
+
+export interface PeriodicElement {
+    name: string;
+    position: number;
+    weight: number;
+    symbol: string;
+}
 
 @Component({
   selector: 'app-client-reg',
@@ -12,18 +26,27 @@ import { MessageServiceService } from 'src/app/services/message-service/message-
   styleUrls: ['./client-reg.component.scss']
 })
 export class ClientRegComponent implements OnInit {
-
   clientRegForm: FormGroup;
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'phoneNumber', 'actions'];
+    isButtonDisabled = false;
+    submitted = false;
+    saveButtonLabel = 'save';
+    mode = 'add';
+    selectedData: any;
+    lastAddedRow: any = null;
+    lastEditedRow: any = null;
+    selectedRow: any = null;
+
+  displayedColumns: string[] = [
+    'firstName',
+    'lastName',
+    'email',
+    'phoneNumber',
+    'actions'
+  ];
+
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  mode = 'add';
-  selectedData: any;
-  isButtonDisabled = false;
-  submitted = false;
-
-  searchValue = ''; //added for search
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -32,109 +55,204 @@ export class ClientRegComponent implements OnInit {
   ) {
     this.clientRegForm = this.fb.group({
       firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.minLength(3), Validators.maxLength(8)]),
-      email: new FormControl('', [Validators.email]),
-      phoneNumber: new FormControl('', [Validators.required])
+      lastName: new FormControl('',
+        [Validators.minLength(3),
+          Validators.maxLength(15)]),
+      email: new FormControl('',[
+        Validators.email,
+        Validators.pattern(
+                    '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
+                ),
+      ]),
+      phoneNumber: new FormControl('',[
+        Validators.required,
+        Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
+      ])
     });
-
-    this.dataSource = new MatTableDataSource([
-      { firstName: 'John', lastName: 'Doe', email: 'john@example.com', phoneNumber: '1234567890' }
-    ]);
   }
 
-  ngOnInit(): void {
-    this.populateData();
-  }
-
-  public populateData(): void {
-    try {
-      this.clientRegService.getData().subscribe((response: any[]) => {
-        console.log("get Data response", response);
-
-        this.dataSource = new MatTableDataSource(response);
-        this.dataSource.paginator = this.paginator;
-
-        //Filter works on all columns
-        this.dataSource.filterPredicate = (data, filter: string) => {
-          const dataStr = Object.values(data).join(' ').toLowerCase();
-          return dataStr.includes(filter);
-        };
-
-      }, error => {
-        console.error("Error fetching data", error);
-      });
-    } catch (error) {
-      this.messageService.showError('Action failed with error ' + error);
-    }
-  }
-
-  onSubmit(): void {
-    try {
-      console.log("Form Submitted", this.clientRegForm.value);
-      this.submitted = true;
-
-      if (this.clientRegForm.invalid) {
-        return;
-      }
-
-      if (this.mode === 'add') {
-        this.clientRegService.serviceCall(this.clientRegForm.value).subscribe(response => {
-          console.log('Server response:', response);
-          this.populateData();
-          this.messageService.showSuccess('Data added successfully!');
-        });
-      } else if (this.mode === 'edit') {
-        this.clientRegService.editData(this.selectedData.id, this.clientRegForm.value).subscribe(response => {
-          console.log('Server response for edit:', response);
-          this.populateData();
-          this.messageService.showSuccess('Data edited successfully!');
-        });
-      }
-
-      this.mode = 'add';
-      this.clientRegForm.disable();
-      this.isButtonDisabled = true;
-    } catch (error) {
-      this.messageService.showError('Action failed with error ' + error);
-    }
-  }
-
-  public resetData(): void {
-    this.clientRegForm.reset();
-    this.clientRegForm.enable();
-    this.isButtonDisabled = false;
-  }
-
-  public editData(data: any): void {
-    this.clientRegForm.patchValue(data);
-    this.clientRegForm.enable();
-    this.mode = 'edit';
-    this.selectedData = data;
-    this.isButtonDisabled = false;
-  }
-
-  public deleteData(data: any): void {
-    try {
-      const id = data.id;
-      this.clientRegService.deleteData(id).subscribe(response => {
-        console.log('Server response for delete:', response);
+    ngOnInit(): void {
+        //get data function
         this.populateData();
-        this.messageService.showSuccess('Data deleted successfully');
-      });
+    }
+
+  public populateData() {
+    try {
+      this.clientRegService.getData().subscribe(
+        (Response: any[]) => {
+          console.log("get Data response", Response);
+
+          if (Response && Response.length > 0) {
+            this.dataSource = new MatTableDataSource(Response);
+            this.dataSource.paginator = this.paginator; // Reassign paginator
+            this.dataSource.sort = this.sort; // Reassign sort
+          }
+        },
+        (error) => {
+          console.error('Error fetching data', error);
+        }
+      );
     } catch (error) {
-      console.log(error);
-      this.messageService.showError(error);
+      this.messageService.showError('Action failed with error ' + error);
     }
   }
-  /*Search*/
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.searchValue = filterValue;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
 
-  clearSearch(): void {
-    this.searchValue = '';
-    this.dataSource.filter = '';
-  }
+  onSubmit() {
+    this.submitted = true;
+    // console.log('Form Submitted');
+    if (this.clientRegForm.invalid) {
+      return;
+    }
+
+    const formValue = this.clientRegForm.value;
+    this.isButtonDisabled = true;
+
+     if (this.mode === 'add') {
+            this.clientRegService.serviceCall(formValue).subscribe({
+                next: (response: any) => {
+                    if (
+                        this.dataSource &&
+                        this.dataSource.data &&
+                        this.dataSource.data.length > 0
+                    ) {
+                        this.dataSource = new MatTableDataSource([
+                            response,
+                            ...this.dataSource.data,
+                        ]);
+                        this.dataSource.paginator = this.paginator; // Reassign paginator
+                        this.dataSource.sort = this.sort; // Reassign sort
+                    } else {
+                        this.dataSource = new MatTableDataSource([response]);
+                    }
+                    this.messageService.showSuccess('Saved Successfully!');
+                    setTimeout(() => {
+                        this.populateData();
+                    }, 1500);
+                    // this.populateData();
+                    this.lastAddedRow = response; // Track the last added row
+                    setTimeout(() => {
+                        this.lastAddedRow = null;
+                    }, 3000);
+                },
+                error: (error) => {
+                    this.messageService.showError(
+                        'Action failed with error ' + error
+                    );
+                    this.isButtonDisabled = false;
+                },
+            });
+        } else if (this.mode === 'edit') {
+            this.clientRegService
+                .editData(this.selectedData?.id, formValue)
+                .subscribe({
+                    next: (response: any) => {
+                        let elementIndex = this.dataSource.data.findIndex(
+                            (element) => element.id === this.selectedData?.id
+                        );
+                        this.dataSource.data[elementIndex] = response;
+                        this.dataSource = new MatTableDataSource(
+                            this.dataSource.data
+                        );
+                        this.messageService.showSuccess(
+                            'Successfully updated!'
+                        );
+                        this.lastEditedRow = response; // Track the last edited row
+                        setTimeout(() => {
+                            this.lastEditedRow = null; // Reset after 3 seconds
+                        }, 3000);
+                        this.populateData();
+                        setTimeout(() => {
+                            this.selectedRow = null;
+                        }, 2000);
+                        this.selectedData = null;
+                    },
+                    error: (error) => {
+                        this.messageService.showError(
+                            'Action failed with error ' + error
+                        );
+                        this.isButtonDisabled = false;
+                    },
+                });
+        }
+        this.mode = 'add';
+        this.clientRegForm.disable();
+        this.isButtonDisabled = true;
+
+        setTimeout(() => {
+            this.mode = 'add';
+            // this.dataPopulate();
+            this.isButtonDisabled = true;
+            this.clientRegForm.disable();
+            // this.resetData();
+        }, 500);
+    }
+
+    public resetData(): void {
+        this.submitted = false;
+        this.clientRegForm.updateValueAndValidity();
+        this.clientRegForm.setErrors = null;
+        this.clientRegForm.reset();
+        this.clientRegForm.enable();
+        this.isButtonDisabled = false;
+        this.saveButtonLabel = 'save';
+        this.mode = 'add';
+        this.selectedRow = null;
+    }
+
+    public editData(data: any): void {
+        this.clientRegForm.patchValue({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phoneNumber: data.phoneNumber,
+        });
+        this.selectedData = data;
+        this.saveButtonLabel = 'update';
+        this.mode = 'edit';
+        this.isButtonDisabled = false;
+
+        if (this.selectedRow && this.selectedRow.id === data.id) {
+            // this.selectedRow = null; // Toggle off if clicked again
+        } else {
+            this.selectedRow = data; // Highlight the new row
+        }
+    }
+
+    public deleteData(data: any): void {
+        try {
+            const id = data.id;
+            this.clientRegService.deleteData(id).subscribe(
+                () => {
+                    this.messageService.showSuccess(
+                        'Data deleted successfully!'
+                    );
+                    this.populateData();
+                },
+                (error) => {
+                    console.error('Error deleting data', error);
+                    this.messageService.showError('Failed to delete data');
+                }
+            );
+        } catch (error) {
+            this.messageService.showError('Action failed with error' + error);
+        }
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
+
+    refreshData() {
+        this.populateData();
+        this.selectedRow = null;
+        this.dataSource.filter = ''; // Clear the filter on the dataSource
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage(); // Reset to the first page
+        }
+    }
 }

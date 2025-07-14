@@ -1,51 +1,49 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from '../http.service';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientRegServiceService {
-  deleteclient(client: any) {
-    throw new Error('Method not implemented.');
-  }
 
-  constructor(
-    private http: HttpClient,
-    private httpService: HttpService
-  ) {}
-
-  serviceCall(formDetails: any) {
-    const requestUrl = `${environment.baseUrl}/client-reg`;
-
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
-
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    return this.http.post(requestUrl, formDetails, { headers });
-  }
+   constructor(private http: HttpClient, private httpService: HttpService) {}
+  
+      serviceCall(form_details: any): Observable<any> {
+          console.log('In the service');
+  
+          const requestUrl = environment.baseUrl + '/client_reg';
+  
+          let headers = new HttpHeaders();
+  
+          const token = this.httpService.getAuthToken();
+          if (token !== null) {
+              headers = headers.set('Authorization', 'Bearer ' + token);
+          }
+  
+          return this.http.post(requestUrl, form_details, { headers });
+      }
 
   getData() {
-    const requestUrl = `${environment.baseUrl}/client-reg`;
+    const requestUrl = `${environment.baseUrl}+'/client-reg`;
 
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
+    let headers={};
 
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
+    if (this.httpService.getAuthToken() !== null) {
+            headers = {
+                Authorization: 'Bearer' + this.httpService.getAuthToken(),
+            };
+        }
+        return this.http.get(requestUrl, headers);
     }
-
-    return this.http.get(requestUrl, { headers });
-  }
 
   editData(id: number, form_details:any){
     console.log('In Edit Data');
 
-    const requestUrl = environment.baseUrl + '/client-reg/'+ id.toString();
+    const requestUrl = 
+    environment.baseUrl + '/client-edit/'+ id.toString();
 
     let headers = {};
 
@@ -58,18 +56,16 @@ export class ClientRegServiceService {
   }
 
   deleteData(id: number){
-    console.log('In Edit Data');
-
     const requestUrl = environment.baseUrl + '/client-reg/'+ id.toString();
 
-    let headers = {};
+    let headers: any = {};
+        const token = this.httpService.getAuthToken();
+        if (token !== null) {
+            headers = {
+                Authorization: 'Bearer ' + token,
+            };
+        }
 
-    if (this.httpService.getAuthToken()! == null){
-      headers = {
-        Authorization: 'Bearer ' + this.httpService.getAuthToken()
-      };
-    }  
-    return this.http.delete(requestUrl, {headers: headers});
-  }
-
+        return this.http.delete(requestUrl, { headers });
+    }
 }

@@ -1,88 +1,115 @@
 <div class="container">
   <div class="form-section">
-    <form [formGroup]="clientRegForm" (ngSubmit)="onSubmit()" class="example-form">
+     <h2 class="form-title">Client Registration</h2>
+    <form [formGroup]="clientRegForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
       <mat-form-field class="full-width">
         <mat-label>First Name</mat-label>
-        <input matInput formControlName="firstName" />
-        <span class ="text-danger" *ngIf="(clientRegForm.get('firstName').touched|| submitted) && clientRegForm.get('firstName').errors['required']" >  First Name is required</span>
+        <input matInput placeholder="Enter First Name" formControlName="firstName"/>
+        <span class="text-danger"
+          *ngIf="clientRegForm.get('firstName') && clientRegForm.get('firstName').touched && clientRegForm.get('firstName').errors && clientRegForm.get('firstName').errors['required']">
+          Enter your First Name
+        </span>
       </mat-form-field>
-
       <mat-form-field class="full-width">
         <mat-label>Last Name</mat-label>
-        <input matInput formControlName="lastName"/>
-        <span class ="text-danger" *ngIf="(clientRegForm.get('lastName').touched|| submitted) && clientRegForm.get('lastName').errors['minlength']" >Minimum 3 characters needed</span>
-        <span class ="text-danger" *ngIf="(clientRegForm.get('lastName').touched|| submitted) && clientRegForm.get('lastName').errors['maxlength']" >Maximum 8 characters only</span>
+        <input matInput placeholder="Enter Last Name" formControlName="lastName" />
+        <span class="text-danger"
+          *ngIf="clientRegForm.get('lastName') && clientRegForm.get('lastName').touched && clientRegForm.get('lastName').errors && clientRegForm.get('lastName').errors['required']">
+          Enter your Last Name
+        </span>
+        <span class="text-danger"
+          *ngIf="(clientRegForm.get('lastName') && clientRegForm.get('lastName').touched || submitted) && clientRegForm.get('lastName').errors && clientRegForm.get('lastName').errors['minlength']">
+          minimum length for last name is 3 characters
+        </span>
+        <span class="text-danger"
+          *ngIf="(clientRegForm.get('lastName') && clientRegForm.get('lastName').touched || submitted) && clientRegForm.get('lastName').errors && clientRegForm.get('lastName').errors['maxlength']">
+          maximum length for last name is 15 characters only
+        </span>
       </mat-form-field>
-
       <mat-form-field class="full-width">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email">
-        <span class ="text-danger" *ngIf="(clientRegForm.get('email').touched|| submitted) && clientRegForm.get('email').errors['email']" >Enter a valid Email address</span>
-      </mat-form-field>
-
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Enter email" formControlName="email" />
+          <span class="text-danger"
+            *ngIf="clientRegForm.get('email') && clientRegForm.get('email').touched && clientRegForm.get('email').errors && clientRegForm.get('email').errors['required']">
+            Enter your Email
+          </span>
+        </mat-form-field>
       <mat-form-field class="full-width">
-        <mat-label>Phone Number</mat-label>
-        <input matInput formControlName="phoneNumber">
-        <span class ="text-danger" *ngIf="(clientRegForm.get('phoneNumber').touched|| submitted) && clientRegForm.get('phoneNumber').errors['required']" >Enter your phone number</span>
-      </mat-form-field>
-
-      <button type="submit" mat-raised-button color="primary" class="form-button"  [disabled]="isButtonDisabled">Save</button>
-      <button type="reset" mat-raised-button color="accent" class="form-button" (click)="resetData()">Reset</button>
+          <mat-label>Phone Number</mat-label>
+          <input matInput placeholder="Enter phone Number" formControlName="phoneNumber" />
+          <span class="text-danger"
+            *ngIf="(clientRegForm.get('phoneNumber') && clientRegForm.get('phoneNumber').touched || submitted) && clientRegForm.get('phoneNumber').errors && clientRegForm.get('phoneNumber').errors['pattern']">
+            please enter valid phone number
+          </span>
+          <span class="text-danger"
+            *ngIf="clientRegForm.get('phoneNumber') && clientRegForm.get('phoneNumber').touched && clientRegForm.get('phoneNumber').errors && clientRegForm.get('phoneNumber').errors['required']">
+            Enter your phone number
+          </span>
+        </mat-form-field>
+        
+        </div>
+      <div class="button-group">
+        <button type="submit" mat-raised-button color="primary" class="form-button" [disabled]="isButtonDisabled">{{
+          saveButtonLabel }}</button>
+        <button type="reset" mat-raised-button color="secondary" class="form-button" (click)="resetData()">Reset</button>
+      </div>
     </form>
   </div>
 
-  <div class="table-section">
+  <div class="table-section mt-5">
+    <h2 class="form-title">Client Information</h2>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Search</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Type to search clients">
-      <button mat-button *ngIf="searchValue" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
+    <div class="refresh-filter-section">
+      <div class="refresh-button">
+        <button mat-icon-button color="primary" (click)="refreshData()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      <br>
+
+      <mat-form-field class="filter">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+      </mat-form-field>
+    </div>
+
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <ng-container matColumnDef="firstName">
         <th mat-header-cell *matHeaderCellDef> First Name </th>
         <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
       </ng-container>
-
       <ng-container matColumnDef="lastName">
         <th mat-header-cell *matHeaderCellDef> Last Name </th>
         <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
       </ng-container>
-
       <ng-container matColumnDef="email">
         <th mat-header-cell *matHeaderCellDef> Email </th>
         <td mat-cell *matCellDef="let element"> {{element.email}} </td>
       </ng-container>
-
       <ng-container matColumnDef="phoneNumber">
         <th mat-header-cell *matHeaderCellDef> Phone Number </th>
         <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
       </ng-container>
-
-      <ng-container matColumnDef="actions">
+       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" (click)="editData(element)">
+          <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="edit">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteData(element)">
+          <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="delete">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'highlight-row': selectedRow && selectedRow.id === row.id,
+        'last-added-row': lastAddedRow && lastAddedRow.id === row.id,
+        'last-edited-row': lastEditedRow && lastEditedRow.id === row.id}"></tr>
     </table>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                 showFirstLastButtons
-                 aria-label="Select page of periodic elements">
-  </mat-paginator>
-
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
   </div>
 </div>
 

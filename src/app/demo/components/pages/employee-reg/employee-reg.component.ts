@@ -20,18 +20,6 @@ export interface PeriodicElement {
     symbol: string;
 }
 
-// const ELEMENT_DATA: any[] = [
-//     {
-//         firstName: 'John',
-//         lastName: 'May',
-//         fullName: 'John May',
-//         age: 26,
-//         email: 'johnmay@gmail.com',
-//         phoneNumber: 506669809,
-//         bloodType: 'O+',
-//     },
-// ];
-
 @Component({
     selector: 'app-employee-reg',
     standalone: false,
@@ -117,7 +105,7 @@ export class EmployeeRegComponent implements OnInit {
         if (!Number.isInteger) {
             return {
                 customAgeValidator: true,
-            };
+            }
         }
         return null;
     }
@@ -153,34 +141,6 @@ export class EmployeeRegComponent implements OnInit {
 
         const formValue = this.employeeRegForm.value;
         this.isButtonDisabled = true;
-
-        // if (this.mode === 'add') {
-        //     this.employeeRegService.serviceCall(formValue).subscribe(
-        //         () => {
-        //             this.messageService.showSuccess('Data added successfully!');
-        //             this.populateData();
-        //             this.resetData();
-        //         },
-        //         () => {
-        //             this.isButtonDisabled = false;
-        //         }
-        //     );
-        // } else if (this.mode === 'edit') {
-        //     this.employeeRegService
-        //         .editData(this.selectedData.id, formValue)
-        //         .subscribe(
-        //             () => {
-        //                 this.messageService.showSuccess(
-        //                     'Data updated successfully!'
-        //                 );
-        //                 this.populateData();
-        //                 this.resetData();
-        //             },
-        //             () => {
-        //                 this.isButtonDisabled = false;
-        //             }
-        //         );
-        // }
 
         if (this.mode === 'add') {
             this.employeeRegService.serviceCall(formValue).subscribe({
@@ -324,10 +284,6 @@ export class EmployeeRegComponent implements OnInit {
             this.dataSource.paginator.firstPage();
         }
     }
-
-    // public refreshData(): void {
-    //     this.populateData();
-    // }
 
     refreshData() {
         this.populateData();
