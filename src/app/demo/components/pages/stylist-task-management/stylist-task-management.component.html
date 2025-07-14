@@ -56,8 +56,8 @@
       <mat-form-field class="full-width"appearance="fill">
         <mat-label>Service Status</mat-label>
         <mat-select formControlName="serviceStatus">
-          <mat-option *ngFor="let service of serviceTypes" [value]="serviceStatus">
-            {{ serviceStatus }}
+          <mat-option *ngFor="let Status of serviceStatus" [value]="serviceStatus">
+            {{ Status }}
           </mat-option>
         </mat-select>
         <span class="text-danger"
@@ -67,7 +67,7 @@
       </mat-form-field>
 
       <button type="submit" mat-raised-button color="primary" class="form-button">Save</button>
-      <button type="button" mat-raised-button color="accent" class="form-button" (click)="resetForm()">Reset</button>
+      <button type="reset" mat-raised-button color="accent" class="form-button" (click)="resetForm()">Reset</button>
 
     </form>
   </div>
