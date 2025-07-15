@@ -67,7 +67,9 @@ export class ClientRegComponent implements OnInit {
       phoneNumber: new FormControl('',[
         Validators.required,
         Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
-      ])
+      ]),
+      userID: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
     });
   }
 
