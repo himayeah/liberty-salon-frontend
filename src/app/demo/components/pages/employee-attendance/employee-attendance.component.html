@@ -1,63 +1,81 @@
 <div class="container">
     <div class="form-section">
+        <h2 class="form-title">Employee Attendance</h2>
+        <form [formGroup]="attendanceForm" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
 
-        <form [formGroup]="attendanceForm" (ngSubmit)="onSubmit()" class="example-form">
+                <mat-form-field class="full-width">
+                    <mat-label>Employee Name</mat-label>
+                    <input matInput placeholder="Enter First Name" formControlName="employeeName">
+                    <span class="text-danger"
+                        *ngIf="attendanceForm.get('employeeName') && attendanceForm.get('employeeName').touched && attendanceForm.get('employeeName').errors && attendanceForm.get('employeeName').errors['required']">
+                        Enter your First NameattendanceForm
+                    </span>
+                </mat-form-field>
+                <mat-form-field class="full-width">
+                    <mat-label>Attendance Status</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option value="Present">Present</mat-option>
+                        <mat-option value="Absent">Absent</mat-option>
+                    </mat-select>
+                    <span class="text-danger"
+                        *ngIf="attendanceForm.get('status') && attendanceForm.get('status').touched && attendanceForm.get('status').errors && attendanceForm.get('status').errors['required']">
+                        Select Attendance Status
+                    </span>
+                </mat-form-field>
+                <mat-form-field class="full-width">
+                    <mat-label>Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <span class="text-danger"
+                        *ngIf="(attendanceForm.get('date').touched || submitted) && attendanceForm.get('date').errors?.['required']">
+                        Date is required
+                    </span>
+                </mat-form-field>
+            </div>
 
-            <mat-form-field class="full-width">
-                <mat-label>Employee Name</mat-label>
-                <input matInput formControlName="employeeName" />
-                <span class="text-danger"
-                    *ngIf="(attendanceForm.get('employeeName').touched || submitted) && attendanceForm.get('employeeName').errors?.['required']">
-                    Employee Name is required
-                </span>
-            </mat-form-field>
 
-            <mat-form-field class="full-width">
-                <mat-label>Status</mat-label>
-                <input matInput formControlName="status" />
-                <span class="text-danger"
-                    *ngIf="(attendanceForm.get('status').touched || submitted) && attendanceForm.get('status').errors?.['required']">
-                    Status is required
-                </span>
-            </mat-form-field>
-
-            <mat-form-field class="full-width">
-                <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="date">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-                <span class="text-danger"
-                    *ngIf="(attendanceForm.get('date').touched || submitted) && attendanceForm.get('date').errors?.['required']">
-                    Date is required
-                </span>
-            </mat-form-field>
-
-
-            <button type="submit" mat-raised-button color="primary" class="form-button"
-                [disabled]="isButtonDisabled">Save</button>
-            <button type="reset" mat-raised-button color="accent" class="form-button"
-                (click)="resetData()">Reset</button>
+            <div class="button-group">
+                <button type="submit" mat-raised-button color="primary" class="form-button"
+                    [disabled]="isButtonDisabled">{{
+                    saveButtonLabel }}</button>
+                <button type="reset" mat-raised-button color="secondary" class="form-button"
+                    (click)="resetData()">Reset</button>
+            </div>
         </form>
     </div>
 
-    <div class="table-section">
+    <div class="table-section mt-5">
+        <h2 class="form-title">Employee Information</h2>
+        <div class="refresh-filter-section">
+            <div class="refresh-button">
+                <button mat-icon-button color="primary" (click)="refreshData()">
+                    <mat-icon>refresh</mat-icon>
+                </button>
+            </div>
+            <br>
+
+            <mat-form-field class="filter">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+            </mat-form-field>
+        </div>
+
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
             <ng-container matColumnDef="employeeName">
                 <th mat-header-cell *matHeaderCellDef>Employee Name</th>
                 <td mat-cell *matCellDef="let element">{{ element.employeeName }}</td>
             </ng-container>
-
             <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef>Status</th>
                 <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
-
             <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef>Date</th>
                 <td mat-cell *matCellDef="let element">{{ element.date | date }}</td>
             </ng-container>
-
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let element">
@@ -71,10 +89,12 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'highlight-row': selectedRow && selectedRow.id === row.id,
+          'last-added-row': lastAddedRow && lastAddedRow.id === row.id,
+          'last-edited-row': lastEditedRow && lastEditedRow.id === row.id}"></tr>
         </table>
-
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-            aria-label="Select page of attendance records"></mat-paginator>
+            aria-label="Select page of periodic elements">
+        </mat-paginator>
     </div>
 </div>

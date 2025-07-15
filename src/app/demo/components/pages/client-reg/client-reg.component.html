@@ -49,9 +49,9 @@
         </mat-form-field>
         <mat-form-field class="full-width">
         <mat-label>User ID</mat-label>
-        <input matInput placeholder="Enter User ID" formControlName="userId"/>
+        <input matInput placeholder="Enter User ID" formControlName="userID"/>
         <span class="text-danger"
-          *ngIf="clientRegForm.get('userId') && clientRegForm.get('userId').touched && clientRegForm.get('userId').errors && clientRegForm.get('userId').errors['required']">
+          *ngIf="clientRegForm.get('userID') && clientRegForm.get('userID').touched && clientRegForm.get('userID').errors && clientRegForm.get('userID').errors['required']">
           Enter User Id
         </span>
       </mat-form-field>
