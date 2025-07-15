@@ -47,6 +47,22 @@
             Enter your phone number
           </span>
         </mat-form-field>
+        <mat-form-field class="full-width">
+        <mat-label>User ID</mat-label>
+        <input matInput placeholder="Enter User ID" formControlName="userId"/>
+        <span class="text-danger"
+          *ngIf="clientRegForm.get('userId') && clientRegForm.get('userId').touched && clientRegForm.get('userId').errors && clientRegForm.get('userId').errors['required']">
+          Enter User Id
+        </span>
+      </mat-form-field>
+        <mat-form-field class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="Enter Password" formControlName="password"/>
+        <span class="text-danger"
+          *ngIf="clientRegForm.get('password') && clientRegForm.get('password').touched && clientRegForm.get('password').errors && clientRegForm.get('password').errors['required']">
+          Enter client Password
+        </span>
+      </mat-form-field>
         
         </div>
       <div class="button-group">

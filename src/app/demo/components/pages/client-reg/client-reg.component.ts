@@ -100,6 +100,8 @@ export class ClientRegComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     // console.log('Form Submitted');
+    console.log("Data : " , this.clientRegForm.value);
+    
     if (this.clientRegForm.invalid) {
       return;
     }

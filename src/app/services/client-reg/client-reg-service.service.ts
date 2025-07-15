@@ -8,13 +8,12 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ClientRegServiceService {
-
    constructor(private http: HttpClient, private httpService: HttpService) {}
   
       serviceCall(form_details: any): Observable<any> {
           console.log('In the service');
   
-          const requestUrl = environment.baseUrl + '/client_reg';
+          const requestUrl = environment.baseUrl + '/client-reg';
   
           let headers = new HttpHeaders();
   
@@ -23,7 +22,7 @@ export class ClientRegServiceService {
               headers = headers.set('Authorization', 'Bearer ' + token);
           }
   
-          return this.http.post(requestUrl, form_details, { headers });
+          return this.http.post('http://localhost:8080/client-reg', form_details, { headers });
       }
 
   getData() {

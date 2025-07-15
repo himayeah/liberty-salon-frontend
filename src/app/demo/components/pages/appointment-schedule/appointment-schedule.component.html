@@ -1,23 +1,25 @@
 <div class="container">
   <div class="form-section">
-    <form [formGroup]="appointmentScheduleForm" (ngSubmit)="onSubmit()" class="example-form">
+    <h2 class="form-title">Appointment Schedule</h2>
+    <form [formGroup]="appointmentScheduleForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid"></div>
 
       <mat-form-field class="full-width">
         <mat-label>Service Name</mat-label>
-        <input matInput formControlName="serviceName" />
-        <span class="text-danger" *ngIf="(appointmentScheduleForm.get('serviceName').touched || submitted) && appointmentScheduleForm.get('serviceName').errors?.['required']">
-          Service Name is required
+        <input matInput placeholder="Enter Service Name" formControlName="serviceName"/>
+        <span class="text-danger"
+          *ngIf="appointmentScheduleForm.get('serviceName') && appointmentScheduleForm.get('serviceName').touched && appointmentScheduleForm.get('serviceName').errors && appointmentScheduleForm.get('serviceName').errors['required']">
+          Enter Service Name
         </span>
       </mat-form-field>
-
       <mat-form-field class="full-width">
         <mat-label>Service Description</mat-label>
-        <input matInput formControlName="serviceDescription" />
-        <span class="text-danger" *ngIf="(appointmentScheduleForm.get('serviceDescription').touched || submitted) && appointmentScheduleForm.get('serviceDescription').errors?.['required']">
-          Description is required
+        <input matInput placeholder="Enter brief Description" formControlName="serviceDescription"/>
+        <span class="text-danger"
+          *ngIf="appointmentScheduleForm.get('serviceDescription') && appointmentScheduleForm.get('serviceDescription').touched && appointmentScheduleForm.get('serviceDescription').errors && appointmentScheduleForm.get('serviceDescription').errors['required']">
+          Enter brief Description
         </span>
       </mat-form-field>
-
       <mat-form-field class="full-width">
         <mat-label>Date</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="serviceDate" />
@@ -27,7 +29,6 @@
           Date is required
         </span>
       </mat-form-field>
-
       <mat-form-field class="full-width">
         <mat-label>Time</mat-label>
         <input matInput formControlName="serviceTime" placeholder="e.g., 10:30 AM" />
