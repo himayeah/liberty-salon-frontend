@@ -17,7 +17,7 @@ export class AppointmentSchedulingServiceService {
   serviceCall(form_details: any): Observable<any> {
     console.log("In the service");
 
-    const requestUrl = environment.baseUrl + '/appointment_schedule_form';
+    const requestUrl = environment.baseUrl + '/appointment-schedule-form';
 
     let headers = new HttpHeaders();
 
@@ -32,7 +32,7 @@ export class AppointmentSchedulingServiceService {
 
   getData() {
 
-    const requestUrl = environment.baseUrl + '/appointment_schedule_form';
+    const requestUrl = environment.baseUrl + '/appointment-schedule-form/appointment-schedule-form';
 
     let headers = {};
 
@@ -45,7 +45,7 @@ export class AppointmentSchedulingServiceService {
   }
 
   deleteData(id: number) {
-    const requestUrl = `${environment.baseUrl}+/appointment_schedule_form/${id}`;
+    const requestUrl = `${environment.baseUrl}+/appointment-schedule-form/${id}`;
 
     let headers: any = {};
     const token = this.httpService.getAuthToken();
@@ -61,7 +61,7 @@ export class AppointmentSchedulingServiceService {
   editData(id: number, form_details: any) {
     console.log('In Edit Data');
 
-    const requestUrl = environment.baseUrl + '/appointment_schedule_form/' + id.toString();
+    const requestUrl = environment.baseUrl + '/appointment-schedule-form/' + id.toString();
 
     let headers = {};
 
