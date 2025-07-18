@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormControl,
-    AbstractControl,
-} from '@angular/forms';
+import { 
+  FormGroup,
+  FormBuilder,
+  FormControl,AbstractControl,
+ } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { EmployeeAttendanceService } from 'src/app/services/employee-attendance/employee-attendance-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
+
 
 export interface PeriodicElement {
     name: string;
@@ -20,13 +20,14 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-client-reg',
+  selector: 'app-employee-attendance',
   standalone: false,
-  templateUrl: './client-reg.component.html',
-  styleUrls: ['./client-reg.component.scss']
+  templateUrl: './employee-attendance.component.html',
+  styleUrl: './employee-attendance.component.scss'
 })
-export class ClientRegComponent implements OnInit {
-  clientRegForm: FormGroup;
+export class EmployeeAttendanceComponent implements OnInit {
+  attendanceForm: FormGroup;
+   employeeRegForm: FormGroup;
     isButtonDisabled = false;
     submitted = false;
     saveButtonLabel = 'save';
@@ -37,10 +38,9 @@ export class ClientRegComponent implements OnInit {
     selectedRow: any = null;
 
   displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'email',
-    'phoneNumber',
+    'employeeName',
+    'status',
+    'date',
     'actions'
   ];
 
@@ -50,69 +50,53 @@ export class ClientRegComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private clientRegService: ClientRegServiceService,
+    private employeeAttendanceService: EmployeeAttendanceService,
     private messageService: MessageServiceService
   ) {
-    this.clientRegForm = this.fb.group({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('',
-        [Validators.minLength(3),
-          Validators.maxLength(15)]),
-      email: new FormControl('',[
-        Validators.email,
-        Validators.pattern(
-                    '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
-                ),
+    this.attendanceForm = this.fb.group({
+      employeeName: new FormControl('', [Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(45),
       ]),
-      phoneNumber: new FormControl('',[
-        Validators.required,
-        Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
-      ]),
-      userID: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      status: new FormControl('', [Validators.required]),
+      date: new FormControl('', [Validators.required])
     });
   }
 
-    ngOnInit(): void {
-        //get data function
-        this.populateData();
-    }
+  ngOnInit(): void {
+    this.populateData();
+  }
 
-  public populateData() {
+  public populateData(): void {
     try {
-      this.clientRegService.getData().subscribe(
-        (Response: any[]) => {
-          console.log("get Data response", Response);
+      this.employeeAttendanceService.getData().subscribe((response: any[]) => {
+        console.log("get Data response", response);
 
-          if (Response && Response.length > 0) {
-            this.dataSource = new MatTableDataSource(Response);
-            this.dataSource.paginator = this.paginator; // Reassign paginator
-            this.dataSource.sort = this.sort; // Reassign sort
-          }
-        },
-        (error) => {
-          console.error('Error fetching data', error);
+        if (response && response.length > 0) {
+          this.dataSource = new MatTableDataSource(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         }
-      );
+      }, error => {
+        console.error("Error fetching data", error);
+      });
     } catch (error) {
       this.messageService.showError('Action failed with error ' + error);
     }
   }
 
-  onSubmit() {
-    this.submitted = true;
-    // console.log('Form Submitted');
-    console.log("Data : " , this.clientRegForm.value);
-    
-    if (this.clientRegForm.invalid) {
-      return;
-    }
+    onSubmit() {
+        this.submitted = true;
+        // console.log('Form Submitted');
+        if (this.attendanceForm.invalid) {
+            return;
+        }
 
-    const formValue = this.clientRegForm.value;
-    this.isButtonDisabled = true;
+        const formValue = this.attendanceForm.value;
+        this.isButtonDisabled = true;
 
-     if (this.mode === 'add') {
-            this.clientRegService.serviceCall(formValue).subscribe({
+        if (this.mode === 'add') {
+            this.employeeAttendanceService.serviceCall(formValue).subscribe({
                 next: (response: any) => {
                     if (
                         this.dataSource &&
@@ -146,7 +130,7 @@ export class ClientRegComponent implements OnInit {
                 },
             });
         } else if (this.mode === 'edit') {
-            this.clientRegService
+            this.employeeAttendanceService
                 .editData(this.selectedData?.id, formValue)
                 .subscribe({
                     next: (response: any) => {
@@ -179,24 +163,24 @@ export class ClientRegComponent implements OnInit {
                 });
         }
         this.mode = 'add';
-        this.clientRegForm.disable();
+        this.employeeRegForm.disable();
         this.isButtonDisabled = true;
 
         setTimeout(() => {
             this.mode = 'add';
             // this.dataPopulate();
             this.isButtonDisabled = true;
-            this.clientRegForm.disable();
+            this.employeeRegForm.disable();
             // this.resetData();
         }, 500);
     }
 
     public resetData(): void {
         this.submitted = false;
-        this.clientRegForm.updateValueAndValidity();
-        this.clientRegForm.setErrors = null;
-        this.clientRegForm.reset();
-        this.clientRegForm.enable();
+        this.attendanceForm.updateValueAndValidity();
+        this.attendanceForm.setErrors = null;
+        this.attendanceForm.reset();
+        this.attendanceForm.enable();
         this.isButtonDisabled = false;
         this.saveButtonLabel = 'save';
         this.mode = 'add';
@@ -204,11 +188,10 @@ export class ClientRegComponent implements OnInit {
     }
 
     public editData(data: any): void {
-        this.clientRegForm.patchValue({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
+        this.attendanceForm.patchValue({
+            employeeName: data.employeeName,
+            status: data.status,
+            date: data.date,
         });
         this.selectedData = data;
         this.saveButtonLabel = 'update';
@@ -225,7 +208,7 @@ export class ClientRegComponent implements OnInit {
     public deleteData(data: any): void {
         try {
             const id = data.id;
-            this.clientRegService.deleteData(id).subscribe(
+            this.employeeAttendanceService.deleteData(id).subscribe(
                 () => {
                     this.messageService.showSuccess(
                         'Data deleted successfully!'

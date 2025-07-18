@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormControl,
-    AbstractControl,
-} from '@angular/forms';
+import { FormGroup,
+  FormBuilder,
+  AbstractControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { StylistTaskManagementServiceService } from 'src/app/services/stylist-task-management/stylist-task-management-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
@@ -20,13 +17,12 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-client-reg',
-  standalone: false,
-  templateUrl: './client-reg.component.html',
-  styleUrls: ['./client-reg.component.scss']
+  selector: 'app-stylist-task-management',
+  templateUrl: './stylist-task-management.component.html',
+  styleUrls: ['./stylist-task-management.component.scss'],
 })
-export class ClientRegComponent implements OnInit {
-  clientRegForm: FormGroup;
+export class StylistTaskManagementComponent implements OnInit {
+  stylistTaskManagementForm: FormGroup;
     isButtonDisabled = false;
     submitted = false;
     saveButtonLabel = 'save';
@@ -37,82 +33,69 @@ export class ClientRegComponent implements OnInit {
     selectedRow: any = null;
 
   displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'email',
-    'phoneNumber',
-    'actions'
-  ];
-
+    'stylistName',
+    'serviceType',
+    'date',
+    'startTime',
+    'endTime',
+    'serviceStatus',
+    'actions'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private fb: FormBuilder,
-    private clientRegService: ClientRegServiceService,
+    private stylistTaskManagementService: StylistTaskManagementServiceService,
     private messageService: MessageServiceService
   ) {
-    this.clientRegForm = this.fb.group({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('',
-        [Validators.minLength(3),
-          Validators.maxLength(15)]),
-      email: new FormControl('',[
-        Validators.email,
-        Validators.pattern(
-                    '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
-                ),
-      ]),
-      phoneNumber: new FormControl('',[
-        Validators.required,
-        Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
-      ]),
-      userID: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+    this.stylistTaskManagementForm = this.fb.group({
+      stylistName: ['', Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+      ],
+      serviceType: ['', Validators.required],
+      date: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
+      serviceStatus: ['', Validators.required],
     });
   }
 
-    ngOnInit(): void {
-        //get data function
-        this.populateData();
-    }
-
-  public populateData() {
-    try {
-      this.clientRegService.getData().subscribe(
-        (Response: any[]) => {
-          console.log("get Data response", Response);
-
-          if (Response && Response.length > 0) {
-            this.dataSource = new MatTableDataSource(Response);
-            this.dataSource.paginator = this.paginator; // Reassign paginator
-            this.dataSource.sort = this.sort; // Reassign sort
-          }
-        },
-        (error) => {
-          console.error('Error fetching data', error);
-        }
-      );
-    } catch (error) {
-      this.messageService.showError('Action failed with error ' + error);
-    }
+  ngOnInit(): void {
+    this.populateData();
   }
 
-  onSubmit() {
-    this.submitted = true;
-    // console.log('Form Submitted');
-    console.log("Data : " , this.clientRegForm.value);
-    
-    if (this.clientRegForm.invalid) {
-      return;
+   public populateData(): void {
+      try {
+        this.stylistTaskManagementService.getData().subscribe((response: any[]) => {
+          console.log("get Data response", response);
+  
+          if (response && response.length > 0) {
+            this.dataSource = new MatTableDataSource(response);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }
+        }, error => {
+          console.error("Error fetching data", error);
+        });
+      } catch (error) {
+        this.messageService.showError('Action failed with error ' + error);
+      }
     }
 
-    const formValue = this.clientRegForm.value;
-    this.isButtonDisabled = true;
+  onSubmit() {
+        this.submitted = true;
+        // console.log('Form Submitted');
+        if (this.stylistTaskManagementForm.invalid) {
+            return;
+        }
 
-     if (this.mode === 'add') {
-            this.clientRegService.serviceCall(formValue).subscribe({
+        const formValue = this.stylistTaskManagementForm.value;
+        this.isButtonDisabled = true;
+
+        if (this.mode === 'add') {
+            this.stylistTaskManagementService.serviceCall(formValue).subscribe({
                 next: (response: any) => {
                     if (
                         this.dataSource &&
@@ -146,7 +129,7 @@ export class ClientRegComponent implements OnInit {
                 },
             });
         } else if (this.mode === 'edit') {
-            this.clientRegService
+            this.stylistTaskManagementService
                 .editData(this.selectedData?.id, formValue)
                 .subscribe({
                     next: (response: any) => {
@@ -179,24 +162,24 @@ export class ClientRegComponent implements OnInit {
                 });
         }
         this.mode = 'add';
-        this.clientRegForm.disable();
+        this.stylistTaskManagementForm.disable();
         this.isButtonDisabled = true;
 
         setTimeout(() => {
             this.mode = 'add';
             // this.dataPopulate();
             this.isButtonDisabled = true;
-            this.clientRegForm.disable();
+            this.stylistTaskManagementForm.disable();
             // this.resetData();
         }, 500);
     }
 
     public resetData(): void {
         this.submitted = false;
-        this.clientRegForm.updateValueAndValidity();
-        this.clientRegForm.setErrors = null;
-        this.clientRegForm.reset();
-        this.clientRegForm.enable();
+        this.stylistTaskManagementForm.updateValueAndValidity();
+        this.stylistTaskManagementForm.setErrors = null;
+        this.stylistTaskManagementForm.reset();
+        this.stylistTaskManagementForm.enable();
         this.isButtonDisabled = false;
         this.saveButtonLabel = 'save';
         this.mode = 'add';
@@ -204,11 +187,12 @@ export class ClientRegComponent implements OnInit {
     }
 
     public editData(data: any): void {
-        this.clientRegForm.patchValue({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
+        this.stylistTaskManagementForm.patchValue({
+            stylistName: data.stylistName,
+            serviceType: data.serviceType,
+            date: data.date,
+            startTime: data.startTime,
+            endTime: data.endTime,
         });
         this.selectedData = data;
         this.saveButtonLabel = 'update';
@@ -225,7 +209,7 @@ export class ClientRegComponent implements OnInit {
     public deleteData(data: any): void {
         try {
             const id = data.id;
-            this.clientRegService.deleteData(id).subscribe(
+            this.stylistTaskManagementService.deleteData(id).subscribe(
                 () => {
                     this.messageService.showSuccess(
                         'Data deleted successfully!'

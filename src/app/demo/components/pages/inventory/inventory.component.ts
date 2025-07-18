@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-    FormBuilder,
-    FormGroup,
-    FormControl,
-    AbstractControl,
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+  AbstractControl
 } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { InventoryServiceService } from 'src/app/services/inventory/inventory-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 
 export interface PeriodicElement {
@@ -20,27 +20,30 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-client-reg',
-  standalone: false,
-  templateUrl: './client-reg.component.html',
-  styleUrls: ['./client-reg.component.scss']
+  selector: 'app-inventory',
+  templateUrl: './inventory.component.html',
+  styleUrls: ['./inventory.component.scss']
 })
-export class ClientRegComponent implements OnInit {
-  clientRegForm: FormGroup;
-    isButtonDisabled = false;
-    submitted = false;
-    saveButtonLabel = 'save';
-    mode = 'add';
-    selectedData: any;
-    lastAddedRow: any = null;
-    lastEditedRow: any = null;
-    selectedRow: any = null;
+export class InventoryComponent implements OnInit {
+  inventoryForm: FormGroup;
+  isButtonDisabled = false;
+  submitted = false;
+  saveButtonLabel = 'save';
+  mode = 'add';
+  selectedData: any;
+  lastAddedRow: any = null;
+  lastEditedRow: any = null;
+  selectedRow: any = null;
 
   displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'email',
-    'phoneNumber',
+    'productName',
+    'productCategory',
+    'supplier',
+    'productQty',
+    'purchasePrice',
+    'sellingPrice',
+    'expiryDate',
+    'productStatus',
     'actions'
   ];
 
@@ -50,69 +53,58 @@ export class ClientRegComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private clientRegService: ClientRegServiceService,
+    private inventoryService: InventoryServiceService,
     private messageService: MessageServiceService
   ) {
-    this.clientRegForm = this.fb.group({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('',
-        [Validators.minLength(3),
-          Validators.maxLength(15)]),
-      email: new FormControl('',[
-        Validators.email,
-        Validators.pattern(
-                    '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
-                ),
-      ]),
-      phoneNumber: new FormControl('',[
-        Validators.required,
-        Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
-      ]),
-      userID: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+    this.inventoryForm = this.fb.group({
+      productName: new FormControl('', [Validators.required]),
+      productCategory: new FormControl('', [Validators.required]),
+      supplier: new FormControl('', [Validators.required]),
+      productQty: new FormControl('', [Validators.required]),
+      purchasePrice: new FormControl('', [Validators.required]),
+      sellingPrice: new FormControl('', [Validators.required]),
+      expiryDate: new FormControl('', [Validators.required]),
+      productStatus: new FormControl('', [Validators.required]),
     });
   }
 
-    ngOnInit(): void {
-        //get data function
-        this.populateData();
-    }
-
-  public populateData() {
-    try {
-      this.clientRegService.getData().subscribe(
-        (Response: any[]) => {
-          console.log("get Data response", Response);
-
-          if (Response && Response.length > 0) {
-            this.dataSource = new MatTableDataSource(Response);
-            this.dataSource.paginator = this.paginator; // Reassign paginator
-            this.dataSource.sort = this.sort; // Reassign sort
-          }
-        },
-        (error) => {
-          console.error('Error fetching data', error);
-        }
-      );
-    } catch (error) {
-      this.messageService.showError('Action failed with error ' + error);
-    }
+  ngOnInit(): void {
+    this.populateData();
   }
 
-  onSubmit() {
-    this.submitted = true;
-    // console.log('Form Submitted');
-    console.log("Data : " , this.clientRegForm.value);
-    
-    if (this.clientRegForm.invalid) {
-      return;
+    public populateData() {
+        try {
+            this.inventoryService.getData().subscribe(
+                (Response: any[]) => {
+                    console.log('get data response', Response);
+
+                    if (Response && Response.length > 0) {
+                        this.dataSource = new MatTableDataSource(Response);
+                        this.dataSource.paginator = this.paginator; // Reassign paginator
+                        this.dataSource.sort = this.sort; // Reassign sort
+                    }
+                },
+                (error) => {
+                    console.error('Error fetching data', error);
+                }
+            );
+        } catch (error) {
+            this.messageService.showError('Action failed with error' + error);
+        }
     }
 
-    const formValue = this.clientRegForm.value;
-    this.isButtonDisabled = true;
+    onSubmit() {
+        this.submitted = true;
+        // console.log('Form Submitted');
+        if (this.inventoryForm.invalid) {
+            return;
+        }
 
-     if (this.mode === 'add') {
-            this.clientRegService.serviceCall(formValue).subscribe({
+        const formValue = this.inventoryForm.value;
+        this.isButtonDisabled = true;
+
+        if (this.mode === 'add') {
+            this.inventoryService.serviceCall(formValue).subscribe({
                 next: (response: any) => {
                     if (
                         this.dataSource &&
@@ -146,7 +138,7 @@ export class ClientRegComponent implements OnInit {
                 },
             });
         } else if (this.mode === 'edit') {
-            this.clientRegService
+            this.inventoryService
                 .editData(this.selectedData?.id, formValue)
                 .subscribe({
                     next: (response: any) => {
@@ -179,24 +171,24 @@ export class ClientRegComponent implements OnInit {
                 });
         }
         this.mode = 'add';
-        this.clientRegForm.disable();
+        this.inventoryForm.disable();
         this.isButtonDisabled = true;
 
         setTimeout(() => {
             this.mode = 'add';
             // this.dataPopulate();
             this.isButtonDisabled = true;
-            this.clientRegForm.disable();
+            this.inventoryForm.disable();
             // this.resetData();
         }, 500);
     }
 
     public resetData(): void {
         this.submitted = false;
-        this.clientRegForm.updateValueAndValidity();
-        this.clientRegForm.setErrors = null;
-        this.clientRegForm.reset();
-        this.clientRegForm.enable();
+        this.inventoryForm.updateValueAndValidity();
+        this.inventoryForm.setErrors = null;
+        this.inventoryForm.reset();
+        this.inventoryForm.enable();
         this.isButtonDisabled = false;
         this.saveButtonLabel = 'save';
         this.mode = 'add';
@@ -204,11 +196,14 @@ export class ClientRegComponent implements OnInit {
     }
 
     public editData(data: any): void {
-        this.clientRegForm.patchValue({
+        this.inventoryForm.patchValue({
             firstName: data.firstName,
             lastName: data.lastName,
+            fullName: data.fullName,
+            age: data.age,
             email: data.email,
             phoneNumber: data.phoneNumber,
+            bloodType: data.bloodType,
         });
         this.selectedData = data;
         this.saveButtonLabel = 'update';
@@ -225,7 +220,7 @@ export class ClientRegComponent implements OnInit {
     public deleteData(data: any): void {
         try {
             const id = data.id;
-            this.clientRegService.deleteData(id).subscribe(
+            this.inventoryService.deleteData(id).subscribe(
                 () => {
                     this.messageService.showSuccess(
                         'Data deleted successfully!'
@@ -260,3 +255,5 @@ export class ClientRegComponent implements OnInit {
         }
     }
 }
+
+

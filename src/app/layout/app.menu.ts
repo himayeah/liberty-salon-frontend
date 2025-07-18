@@ -30,6 +30,41 @@ const navigationModel = [
                 icon: 'pi pi-fw pi-home',
                 routerLink: ['/pages/client-reg'],
             },
+            {
+                label: 'Employee Registration',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/employee-reg'],
+            },
+            {
+                label: 'Appointment Schedule',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/appointment-schedule'],
+            },
+            {
+                label: 'Employee Attendance',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/employee-attendance'],
+            },
+            {
+                label: 'Stylist Task Management',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/stylist-task-management'],
+            },
+             {
+                label: 'Inventory',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/pages/inventory'],
+            }
         ],
     },
 

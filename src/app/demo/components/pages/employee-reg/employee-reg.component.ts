@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
     FormControl,
     AbstractControl,
 } from '@angular/forms';
+import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
+import { OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { Validators } from '@angular/forms';
@@ -20,13 +21,13 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-client-reg',
-  standalone: false,
-  templateUrl: './client-reg.component.html',
-  styleUrls: ['./client-reg.component.scss']
+    selector: 'app-employee-reg',
+    standalone: false,
+    templateUrl: './employee-reg.component.html',
+    styleUrls: ['./employee-reg.component.scss'],
 })
-export class ClientRegComponent implements OnInit {
-  clientRegForm: FormGroup;
+export class EmployeeRegComponent implements OnInit {
+    employeeRegForm: FormGroup;
     isButtonDisabled = false;
     submitted = false;
     saveButtonLabel = 'save';
@@ -36,83 +37,113 @@ export class ClientRegComponent implements OnInit {
     lastEditedRow: any = null;
     selectedRow: any = null;
 
-  displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'email',
-    'phoneNumber',
-    'actions'
-  ];
+    displayedColumns: string[] = [
+        'firstName',
+        'lastName',
+        'fullName',
+        'age',
+        'email',
+        'phoneNumber',
+        'bloodType',
+        'actions',
+    ];
 
-  dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+    dataSource: MatTableDataSource<any>;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
-  constructor(
-    private fb: FormBuilder,
-    private clientRegService: ClientRegServiceService,
-    private messageService: MessageServiceService
-  ) {
-    this.clientRegForm = this.fb.group({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('',
-        [Validators.minLength(3),
-          Validators.maxLength(15)]),
-      email: new FormControl('',[
-        Validators.email,
-        Validators.pattern(
+    constructor(
+        private fb: FormBuilder,
+        private employeeRegService: EmployeeRegServicesService,
+        private messageService: MessageServiceService
+    ) {
+        this.employeeRegForm = this.fb.group({
+            firstName: new FormControl('', [Validators.required]),
+            lastName: new FormControl('', [
+                Validators.required,
+                Validators.minLength(3),
+                Validators.maxLength(15),
+            ]),
+            fullName: new FormControl('', [Validators.required]),
+            age: new FormControl('', [
+                Validators.required,
+                Validators.min(18),
+                Validators.max(40),
+                this.customAgeValidator,
+            ]),
+            email: new FormControl('', [
+                Validators.required,
+                Validators.pattern(
                     '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
                 ),
-      ]),
-      phoneNumber: new FormControl('',[
-        Validators.required,
-        Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
-      ]),
-      userID: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-    });
-  }
+            ]), // <- we can use this [ Validators.email ]
+            phoneNumber: new FormControl('', [
+                Validators.required,
+                Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
+            ]),
+            bloodType: new FormControl('', [Validators.required]),
+        });
+    }
 
     ngOnInit(): void {
         //get data function
         this.populateData();
     }
 
-  public populateData() {
-    try {
-      this.clientRegService.getData().subscribe(
-        (Response: any[]) => {
-          console.log("get Data response", Response);
-
-          if (Response && Response.length > 0) {
-            this.dataSource = new MatTableDataSource(Response);
-            this.dataSource.paginator = this.paginator; // Reassign paginator
-            this.dataSource.sort = this.sort; // Reassign sort
-          }
-        },
-        (error) => {
-          console.error('Error fetching data', error);
+    // custom age validation
+    customAgeValidator(control: AbstractControl) {
+        if (!control) {
+            return null;
         }
-      );
-    } catch (error) {
-      this.messageService.showError('Action failed with error ' + error);
+
+        const controlValue = +control.value;
+
+        if (isNaN(controlValue)) {
+            return { customAgeValidator: true };
+        }
+
+        if (!Number.isInteger) {
+            return {
+                customAgeValidator: true,
+            }
+        }
+        return null;
     }
-  }
 
-  onSubmit() {
-    this.submitted = true;
-    // console.log('Form Submitted');
-    console.log("Data : " , this.clientRegForm.value);
-    
-    if (this.clientRegForm.invalid) {
-      return;
+    //to keep the function clean, we implement it outside ngOnInit.
+    public populateData() {
+        try {
+            this.employeeRegService.getData().subscribe(
+                (Response: any[]) => {
+                    console.log('get data response', Response);
+
+                    if (Response && Response.length > 0) {
+                        this.dataSource = new MatTableDataSource(Response);
+                        this.dataSource.paginator = this.paginator; // Reassign paginator
+                        this.dataSource.sort = this.sort; // Reassign sort
+                    }
+                },
+                (error) => {
+                    console.error('Error fetching data', error);
+                }
+            );
+        } catch (error) {
+            this.messageService.showError('Action failed with error' + error);
+        }
     }
 
-    const formValue = this.clientRegForm.value;
-    this.isButtonDisabled = true;
+    onSubmit() {
+        this.submitted = true;
+        // console.log('Form Submitted');
+        if (this.employeeRegForm.invalid) {
+            return;
+        }
 
-     if (this.mode === 'add') {
-            this.clientRegService.serviceCall(formValue).subscribe({
+        const formValue = this.employeeRegForm.value;
+        this.isButtonDisabled = true;
+
+        if (this.mode === 'add') {
+            this.employeeRegService.serviceCall(formValue).subscribe({
                 next: (response: any) => {
                     if (
                         this.dataSource &&
@@ -146,7 +177,7 @@ export class ClientRegComponent implements OnInit {
                 },
             });
         } else if (this.mode === 'edit') {
-            this.clientRegService
+            this.employeeRegService
                 .editData(this.selectedData?.id, formValue)
                 .subscribe({
                     next: (response: any) => {
@@ -179,24 +210,24 @@ export class ClientRegComponent implements OnInit {
                 });
         }
         this.mode = 'add';
-        this.clientRegForm.disable();
+        this.employeeRegForm.disable();
         this.isButtonDisabled = true;
 
         setTimeout(() => {
             this.mode = 'add';
             // this.dataPopulate();
             this.isButtonDisabled = true;
-            this.clientRegForm.disable();
+            this.employeeRegForm.disable();
             // this.resetData();
         }, 500);
     }
 
     public resetData(): void {
         this.submitted = false;
-        this.clientRegForm.updateValueAndValidity();
-        this.clientRegForm.setErrors = null;
-        this.clientRegForm.reset();
-        this.clientRegForm.enable();
+        this.employeeRegForm.updateValueAndValidity();
+        this.employeeRegForm.setErrors = null;
+        this.employeeRegForm.reset();
+        this.employeeRegForm.enable();
         this.isButtonDisabled = false;
         this.saveButtonLabel = 'save';
         this.mode = 'add';
@@ -204,11 +235,14 @@ export class ClientRegComponent implements OnInit {
     }
 
     public editData(data: any): void {
-        this.clientRegForm.patchValue({
+        this.employeeRegForm.patchValue({
             firstName: data.firstName,
             lastName: data.lastName,
+            fullName: data.fullName,
+            age: data.age,
             email: data.email,
             phoneNumber: data.phoneNumber,
+            bloodType: data.bloodType,
         });
         this.selectedData = data;
         this.saveButtonLabel = 'update';
@@ -225,7 +259,7 @@ export class ClientRegComponent implements OnInit {
     public deleteData(data: any): void {
         try {
             const id = data.id;
-            this.clientRegService.deleteData(id).subscribe(
+            this.employeeRegService.deleteData(id).subscribe(
                 () => {
                     this.messageService.showSuccess(
                         'Data deleted successfully!'
