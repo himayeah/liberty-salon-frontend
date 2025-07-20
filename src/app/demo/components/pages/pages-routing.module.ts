@@ -21,10 +21,10 @@ export const PagesRoutes: Routes = [
         { path: 'timeline', loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: 'client-reg', component: ClientRegComponent }, // need to include the path here for form demo component
         { path: 'employee-reg', component: EmployeeRegComponent },
-        { path: 'appointment-schedule', component: AppointmentScheduleComponent },
         { path: 'employee-attendance', component: EmployeeAttendanceComponent},
         {path:'stylist-task-management', component: StylistTaskManagementComponent},
         {path:'inventory', component: InventoryComponent},
+        {path:'appointment-schedule', component: AppointmentScheduleComponent},
         { path: '**', redirectTo: '/notfound' },
 
     ])],
