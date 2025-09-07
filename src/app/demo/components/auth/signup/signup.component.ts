@@ -1,74 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { CacheService } from 'src/app/services/CacheService';
 import { HttpService } from 'src/app/services/http.service';
-import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './signup.component.html',
-    styles: [
-        `
-            :host ::ng-deep .pi-eye,
-            :host ::ng-deep .pi-eye-slash {
-                transform: scale(1.6);
-                margin-right: 1rem;
-                color: var(--primary-color) !important;
-            }
-        `,
-    ],
+  selector: 'app-signup',
+  templateUrl: './signup.component.html'
 })
 export class SignupComponent implements OnInit {
-    registerForm: FormGroup;
-    submitted = false;
-    // data: string[] = [];
+  registerForm: FormGroup;
+  submitted = false;
 
-    constructor(
-        public layoutService: LayoutService,
-        private formBuilder: FormBuilder,
-        private router: Router,
-        private httpService: HttpService
-    ) {
-        this.registerForm = this.formBuilder.group({
-            firstName: ['', [Validators.required]],
-            lastName: ['', [Validators.required]],
-            login: ['', [Validators.required]],
-            password: ['', [Validators.required]],
-        });
-    }
+  constructor(
+    public layoutService: LayoutService,
+    private fb: FormBuilder,
+    private router: Router,
+    private httpService: HttpService
+  ) {
+    this.registerForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      login: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
 
-    ngOnInit(): void {
-        // this.httpService
-        //   .request('GET', '/messages', null)
-        //   .then((response: any) => {
-        //     this.data = response;
-        //   });
-    }
+  ngOnInit(): void {}
 
-    get formControl() {
-        return this.registerForm?.controls;
-    }
+  get formControl() {
+    return this.registerForm.controls;
+  }
 
-    onSubmitRegister() {
-        this.submitted = true;
-        if (this.registerForm?.valid) {
-            this.httpService
-                .request('POST', '/register', {
-                    firstName: this.registerForm.value.firstName,
-                    lastName: this.registerForm.value.lastName,
-                    login: this.registerForm.value.login,
-                    password: this.registerForm.value.password,
-                })
-                .then((response: any) => {
-                    this.httpService.setAuthToken(response.token);
-                    this.router.navigate(['/auth/login']);
-                })
-                .catch((error) => {
-                    this.submitted = false;
-                });
-        }
-    }
+  onSubmitRegister(): void {
+    this.submitted = true;
+
+    if (this.registerForm.invalid) return;
+
+    const { firstName, lastName, login, password } = this.registerForm.value;
+
+    this.httpService
+      .request('POST', '/register', { firstName, lastName, login, password })
+      .then((response: any) => {
+        this.httpService.setAuthToken(response.token);
+        this.router.navigate(['/auth/login']);
+      })
+      .catch(() => {
+        this.submitted = false;
+      });
+  }
 }

@@ -1,176 +1,92 @@
-<div
-    class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden"
->
-    <div class="flex flex-column align-items-center justify-content-center">
-        <img
-            src="assets/layout/images/{{
-                layoutService.config().colorScheme === 'light'
-                    ? 'logo-dark'
-                    : 'logo-white'
-            }}.svg"
-            alt="Sakai logo"
-            class="mb-5 w-6rem flex-shrink-0"
-        />
-        <div
-            style="
-                border-radius: 56px;
-                padding: 0.3rem;
-                background: linear-gradient(
-                    180deg,
-                    var(--primary-color) 10%,
-                    rgba(33, 150, 243, 0) 30%
-                );
-            "
-        >
-            <div
-                class="w-full surface-card py-8 px-5 sm:px-8"
-                style="border-radius: 53px"
-            >
-                <div class="text-center mb-5">
-                    <img
-                        src="assets/demo/images/login/avatar.png"
-                        alt="Image"
-                        height="50"
-                        class="mb-3"
-                    />
-                    <div class="text-900 text-3xl font-medium mb-3">
-                        Welcome!
-                    </div>
-                    <span class="text-600 font-medium"
-                        >Sign in to continue</span
-                    >
-                </div>
-
-                <form
-                    [formGroup]="registerForm"
-                    (ngSubmit)="onSubmitRegister()"
-                >
-                    <label
-                        for="firstName"
-                        class="block text-900 text-xl font-medium mb-2"
-                        >First Name</label
-                    >
-                    <input
-                        id="firstName"
-                        type="text"
-                        placeholder="First Name"
-                        pInputText
-                        class="w-full md:w-30rem mb-5"
-                        formControlName="firstName"
-                        style="padding: 1rem"
-                    />
-                    <span
-                        class="text-danger"
-                        *ngIf="
-                            (formControl['firstName'].touched || submitted) &&
-                            formControl['firstName'].errors &&
-                            formControl['firstName'].errors['required']
-                        "
-                    >
-                        First name is required
-                    </span>
-
-                    <label
-                        for="lastName"
-                        class="block text-900 text-xl font-medium mb-2"
-                        >Last Name</label
-                    >
-                    <input
-                        id="lastName"
-                        type="text"
-                        placeholder="Last Name"
-                        pInputText
-                        class="w-full md:w-30rem mb-5"
-                        formControlName="lastName"
-                        style="padding: 1rem"
-                    />
-                    <span
-                        class="text-danger"
-                        *ngIf="
-                            (formControl['lastName'].touched || submitted) &&
-                            formControl['lastName'].errors &&
-                            formControl['lastName'].errors['required']
-                        "
-                    >
-                        Last name is required
-                    </span>
-
-                    <label
-                        for="login"
-                        class="block text-900 text-xl font-medium mb-2"
-                        >User Name</label
-                    >
-                    <input
-                        id="login"
-                        type="text"
-                        placeholder="User Name"
-                        pInputText
-                        class="w-full md:w-30rem mb-5"
-                        formControlName="login"
-                        style="padding: 1rem"
-                    />
-                    <span
-                        class="text-danger"
-                        *ngIf="
-                            (formControl['login'].touched || submitted) &&
-                            formControl['login'].errors &&
-                            formControl['login'].errors['required']
-                        "
-                    >
-                        Username is required
-                    </span>
-
-                    <label
-                        for="password"
-                        class="block text-900 font-medium text-xl mb-2"
-                        >Password</label
-                    >
-                    <input
-                        id="password"
-                        type="password"
-                        placeholder="password"
-                        pInputText
-                        class="w-full md:w-30rem mb-5"
-                        formControlName="password"
-                        style="padding: 1rem"
-                    />
-                    <span
-                        class="text-danger"
-                        *ngIf="
-                            (formControl['password'].touched || submitted) &&
-                            formControl['password'].errors &&
-                            formControl['password'].errors['required']
-                        "
-                    >
-                        Password is required
-                    </span>
-
-                    <div
-                        class="flex align-items-center justify-content-between mb-5 gap-5"
-                    >
-                        <div class="flex align-items-center">
-                            <p-checkbox
-                                id="rememberme1"
-                                [binary]="true"
-                                styleClass="mr-2"
-                            ></p-checkbox>
-                            <label for="rememberme1">Remember me</label>
-                        </div>
-                        <a
-                            class="font-medium no-underline ml-2 text-right cursor-pointer"
-                            style="color: var(--primary-color)"
-                            >Forgot password?</a
-                        >
-                    </div>
-                    <button
-                        pButton
-                        pRipple
-                        label="Sign In"
-                        class="w-full p-3 text-xl"
-                        type="submit"
-                    ></button>
-                </form>
-            </div>
-        </div>
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="card shadow-lg rounded-4 p-4" style="max-width: 500px; width: 100%;">
+    <div class="text-center mb-4">
+      <img 
+        [src]="layoutService.config().colorScheme === 'light' ? 'assets/layout/images/logo-dark.svg' : 'assets/layout/images/logo-white.svg'" 
+        alt="App Logo" 
+        class="mb-3" 
+        style="width: 80px;"
+      />
+      <h3 class="fw-bold">Welcome!</h3>
+      <p class="text-muted">Sign up to continue</p>
     </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+      <!-- First Name -->
+      <div class="mb-3">
+        <label for="firstName" class="form-label fw-semibold">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          class="form-control"
+          placeholder="Enter your first name"
+          formControlName="firstName"
+        />
+        <div *ngIf="submitted && formControl['firstName'].errors" class="text-danger small">
+          First name is required
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="mb-3">
+        <label for="lastName" class="form-label fw-semibold">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          class="form-control"
+          placeholder="Enter your last name"
+          formControlName="lastName"
+        />
+        <div *ngIf="submitted && formControl['lastName'].errors" class="text-danger small">
+          Last name is required
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="login" class="form-label fw-semibold">Username</label>
+        <input
+          id="login"
+          type="text"
+          class="form-control"
+          placeholder="Enter a username"
+          formControlName="login"
+        />
+        <div *ngIf="submitted && formControl['login'].errors" class="text-danger small">
+          Username is required
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          placeholder="Enter your password"
+          formControlName="password"
+        />
+        <div *ngIf="submitted && formControl['password'].errors" class="text-danger small">
+          Password is required
+        </div>
+      </div>
+
+      <!-- Remember me & Forgot Password -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="form-check">
+          <input id="rememberMe" type="checkbox" class="form-check-input" />
+          <label for="rememberMe" class="form-check-label">Remember me</label>
+        </div>
+        <a class="text-primary text-decoration-none" routerLink="/auth/forgot-password">
+          Forgot password?
+        </a>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+        Sign Up
+      </button>
+    </form>
+  </div>
 </div>
