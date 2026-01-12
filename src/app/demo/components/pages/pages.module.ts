@@ -9,15 +9,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ClientRegComponent } from './client-reg/client-reg.component';
 import {EmployeeRegComponent} from './employee-reg/employee-reg.component';
 import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatNativeDateModule, MatOption } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import {EmployeeAttendanceComponent} from './employee-attendance/employee-attendance.component';
 import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
-import { MatSelect } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { InventoryComponent } from './inventory/inventory.component';
+import { ServiceCategoryComponent } from './service-category/service-category.component';
+import { ServiceComponent } from './service/service.component';
+
 
 @NgModule({
   declarations: [
@@ -25,9 +32,10 @@ import { InventoryComponent } from './inventory/inventory.component';
     EmployeeRegComponent,
     AppointmentScheduleComponent,
     EmployeeAttendanceComponent,
-    AppointmentScheduleComponent,
     StylistTaskManagementComponent,
     InventoryComponent,
+    ServiceCategoryComponent,
+    ServiceComponent
   ],
 
     imports: [
@@ -41,11 +49,13 @@ import { InventoryComponent } from './inventory/inventory.component';
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
+    MatSortModule,
+    MatTooltipModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelect,
-    MatOption,
-],
-    providers: [MatDatepickerModule]
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+]
   })
   export class PagesModule { }

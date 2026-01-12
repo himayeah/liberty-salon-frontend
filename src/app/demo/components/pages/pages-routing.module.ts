@@ -7,6 +7,8 @@ import { AppointmentScheduleComponent } from './appointment-schedule/appointment
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { ServiceCategoryComponent } from './service-category/service-category.component';
+import { ServiceComponent } from './service/service.component';
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -25,6 +27,8 @@ export const PagesRoutes: Routes = [
         { path: 'employee-attendance', component: EmployeeAttendanceComponent},
         {path:'stylist-task-management', component: StylistTaskManagementComponent},
         {path:'inventory', component: InventoryComponent},
+        {path:'service-category', component: ServiceCategoryComponent},
+        {path:'service', component: ServiceComponent},
         { path: '**', redirectTo: '/notfound' },
 
     ])],

@@ -1,0 +1,16 @@
+.form-actions {
+	margin-top: 8px;
+}
+
+.truncate {
+	max-width: 420px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Small spacing for material fields inside the card */
+:host ::ng-deep .mat-form-field {
+	margin-bottom: 6px;
+}
+

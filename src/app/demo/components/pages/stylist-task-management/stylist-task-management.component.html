@@ -1,129 +1,135 @@
-<div class="container">
-  <div class="form-section">
-    <h2 class="form-title">Stylist Task Management Form</h2>
-    <form [formGroup]="stylistTaskManagementForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <mat-form-field class="full-width">
-          <mat-label>Stylist Name</mat-label>
-          <input matInput placeholder="Enter Stylist Name" formControlName="stylistName" />
-          <span class="text-danger"
-            *ngIf="stylistTaskManagementForm.get('stylistName') && stylistTaskManagementForm.get('stylistName').touched && stylistTaskManagementForm.get('stylistName').errors && stylistTaskManagementForm.get('stylistName').errors['required']">
-            Enter your First Name
-          </span>
-        </mat-form-field>
-        <mat-form-field class="full-width">
-          <mat-label>Service Type</mat-label>
-          <mat-select formControlName="serviceType">
-            <mat-option value="Haircut">Haircut</mat-option>
-            <mat-option value="Hair Color">Hair Coloring</mat-option>
-            <mat-option value="Hair Straightening">Hair Straightening</mat-option>
-            <mat-option value="Hair Treatment">Hair Treatment</mat-option>
-            <mat-option value="Hair Perm">Hair Perm</mat-option>
-            <mat-option value="Blow-dry">Blow-dry</mat-option>
-            <mat-option value="Scalp treatment">Scalp Treatment</mat-option>
-            <mat-option value="Pedicure">Pedicure</mat-option>
-          </mat-select>
-          <span class="text-danger"
-            *ngIf="stylistTaskManagementForm.get('serviceType') && stylistTaskManagementForm.get('serviceType').touched && stylistTaskManagementForm.get('serviceType').errors && stylistTaskManagementForm.get('serviceType').errors['required']">
-            Service Type is Required
-          </span>
-        </mat-form-field>
-        <mat-form-field class="full-width">
-          <mat-label>Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <span class="text-danger"
-            *ngIf="(stylistTaskManagementForm.get('date')?.touched || submitted) && stylistTaskManagementForm.get('date')?.errors?.['required']">
-            Date is required
-          </span>
-        </mat-form-field>
-        <mat-form-field class="full-width">
-          <mat-label>Start Time</mat-label>
-          <input matInput formControlName="startTime" placeholder="e.g., 10:30 AM" />
-          <span class="text-danger"
-            *ngIf="(stylistTaskManagementForm.get('startTime')?.touched || submitted) && stylistTaskManagementForm.get('startTime')?.errors?.['required']">
-            Start Time is required
-          </span>
-        </mat-form-field>
-        <mat-form-field class="full-width">
-          <mat-label>End Time</mat-label>
-          <input matInput formControlName="endTime" placeholder="e.g., 12:30 PM" />
-          <span class="text-danger"
-            *ngIf="(stylistTaskManagementForm.get('endTime')?.touched || submitted) && stylistTaskManagementForm.get('endTime')?.errors?.['required']">
-            End Time is required
-          </span>
-        </mat-form-field>
+<div class="container my-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Stylist Task Management Form</h4>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="stylistTaskManagementForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <mat-form-field class="full-width">
+            <mat-label>Stylist Name</mat-label>
+            <input matInput placeholder="Enter Stylist Name" formControlName="stylistName" />
+            <span class="text-danger"
+              *ngIf="stylistTaskManagementForm.get('stylistName') && stylistTaskManagementForm.get('stylistName').touched && stylistTaskManagementForm.get('stylistName').errors && stylistTaskManagementForm.get('stylistName').errors['required']">
+              Enter your First Name
+            </span>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Service Type</mat-label>
+            <mat-select formControlName="serviceType">
+              <mat-option value="Haircut">Haircut</mat-option>
+              <mat-option value="Hair Color">Hair Coloring</mat-option>
+              <mat-option value="Hair Straightening">Hair Straightening</mat-option>
+              <mat-option value="Hair Treatment">Hair Treatment</mat-option>
+              <mat-option value="Hair Perm">Hair Perm</mat-option>
+              <mat-option value="Blow-dry">Blow-dry</mat-option>
+              <mat-option value="Scalp treatment">Scalp Treatment</mat-option>
+              <mat-option value="Pedicure">Pedicure</mat-option>
+            </mat-select>
+            <span class="text-danger"
+              *ngIf="stylistTaskManagementForm.get('serviceType') && stylistTaskManagementForm.get('serviceType').touched && stylistTaskManagementForm.get('serviceType').errors && stylistTaskManagementForm.get('serviceType').errors['required']">
+              Service Type is Required
+            </span>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <span class="text-danger"
+              *ngIf="(stylistTaskManagementForm.get('date')?.touched || submitted) && stylistTaskManagementForm.get('date')?.errors?.['required']">
+              Date is required
+            </span>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Start Time</mat-label>
+            <input matInput formControlName="startTime" placeholder="e.g., 10:30 AM" />
+            <span class="text-danger"
+              *ngIf="(stylistTaskManagementForm.get('startTime')?.touched || submitted) && stylistTaskManagementForm.get('startTime')?.errors?.['required']">
+              Start Time is required
+            </span>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>End Time</mat-label>
+            <input matInput formControlName="endTime" placeholder="e.g., 12:30 PM" />
+            <span class="text-danger"
+              *ngIf="(stylistTaskManagementForm.get('endTime')?.touched || submitted) && stylistTaskManagementForm.get('endTime')?.errors?.['required']">
+              End Time is required
+            </span>
+          </mat-form-field>
 
-      </div>
-      <div class="button-group">
-        <button type="submit" mat-raised-button color="primary" class="form-button" [disabled]="isButtonDisabled">{{
-          saveButtonLabel }}</button>
-        <button type="reset" mat-raised-button color="secondary" class="form-button"
-          (click)="resetData()">Reset</button>
-      </div>
-    </form>
+        </div>
+        <div class="button-group">
+          <button type="submit" mat-raised-button color="primary" class="form-button" [disabled]="isButtonDisabled">{{
+            saveButtonLabel }}</button>
+          <button type="reset" mat-raised-button color="secondary" class="form-button"
+            (click)="resetData()">Reset</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <div class="table-section mt-5">
-    <h2 class="form-title">Stylist Tasks Information</h2>
-
-    <div class="refresh-filter-section">
-      <div class="refresh-button">
-        <button mat-icon-button color="primary" (click)="refreshData()">
-          <mat-icon>refresh</mat-icon>
-        </button>
-      </div>
-      <br>
-
-      <mat-form-field class="filter">
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-      </mat-form-field>
+  <div class="card shadow-sm mt-5">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Stylist Tasks Information</h4>
+      <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
+        <mat-icon>refresh</mat-icon>
+      </button>
     </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" />
+          </mat-form-field>
+        </div>
+      </div>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <ng-container matColumnDef="stylistName">
-        <th mat-header-cell *matHeaderCellDef> Stylist Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.stylistName}} </td>
-      </ng-container>
-      <ng-container matColumnDef="serviceType">
-        <th mat-header-cell *matHeaderCellDef> Service Type </th>
-        <td mat-cell *matCellDef="let element"> {{element.serviceType}} </td>
-      </ng-container>
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef> Date </th>
-        <td mat-cell *matCellDef="let element"> {{element.date | date:'shortDate'}} </td>
-      </ng-container>
-      <ng-container matColumnDef="startTime">
-        <th mat-header-cell *matHeaderCellDef> Start Time </th>
-        <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
-      </ng-container>
-      <ng-container matColumnDef="endTime">
-        <th mat-header-cell *matHeaderCellDef> End Time </th>
-        <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
-      </ng-container>
-      <ng-container matColumnDef="serviceStatus">
-        <th mat-header-cell *matHeaderCellDef>Task Status </th>
-        <td mat-cell *matCellDef="let element"> {{element.serviceStatus}} </td>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="edit">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="edit">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'highlight-row': selectedRow && selectedRow.id === row.id,
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="stylistName">
+          <th mat-header-cell *matHeaderCellDef> Stylist Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.stylistName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="serviceType">
+          <th mat-header-cell *matHeaderCellDef> Service Type </th>
+          <td mat-cell *matCellDef="let element"> {{element.serviceType}} </td>
+        </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.date | date:'shortDate'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="startTime">
+          <th mat-header-cell *matHeaderCellDef> Start Time </th>
+          <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+        </ng-container>
+        <ng-container matColumnDef="endTime">
+          <th mat-header-cell *matHeaderCellDef> End Time </th>
+          <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+        </ng-container>
+        <ng-container matColumnDef="serviceStatus">
+          <th mat-header-cell *matHeaderCellDef>Task Status </th>
+          <td mat-cell *matCellDef="let element"> {{element.serviceStatus}} </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="edit">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'highlight-row': selectedRow && selectedRow.id === row.id,
               'last-added-row': lastAddedRow && lastAddedRow.id === row.id,
               'last-edited-row': lastEditedRow && lastEditedRow.id === row.id}"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
-    </mat-paginator>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+        aria-label="Select page of periodic elements">
+      </mat-paginator>
     </div>
-    </div>
+  </div>
+</div>
