@@ -15,12 +15,10 @@ export class AppointmentSchedulingServiceService {
   ) { }
 
   serviceCall(form_details: any): Observable<any> {
-    console.log("In the service");
-
-    const requestUrl = environment.baseUrl + '/appointment-schedule-form';
-
+  
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form`;
+   
     let headers = new HttpHeaders();
-
     const token = this.httpService.getAuthToken();
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
@@ -29,47 +27,41 @@ export class AppointmentSchedulingServiceService {
     return this.http.post(requestUrl, form_details, { headers });
   }
 
-
   getData() {
 
-    const requestUrl = environment.baseUrl + '/appointment-schedule-form/appointment-schedule-form';
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form`;
 
-    let headers = {};
-
-    if (this.httpService.getAuthToken() !== null) {
-      headers = {
-        Authorization: 'Bearer' + this.httpService.getAuthToken()
-      };
-    }
-    return this.http.get(requestUrl, headers);
-  }
-
-  deleteData(id: number) {
-    const requestUrl = `${environment.baseUrl}+/appointment-schedule-form/${id}`;
-
-    let headers: any = {};
+    let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
-      headers = {
-        Authorization: 'Bearer ' + token
-      };
+        headers = headers.set('Authorization', 'Bearer ' + token);
     }
+    return this.http.get(requestUrl, { headers });
+  }
 
+  deleteData(id: number){
+
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/${id}`;
+
+    let headers = new HttpHeaders ();
+    const token = this.httpService.getAuthToken();
+    if(token !== null){
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
     return this.http.delete(requestUrl, { headers });
   }
 
   editData(id: number, form_details: any) {
     console.log('In Edit Data');
 
-    const requestUrl = environment.baseUrl + '/appointment-schedule-form/' + id.toString();
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/${id}`;
 
-    let headers = {};
-
-    if (this.httpService.getAuthToken()! == null) {
-      headers = {
-        Authorization: 'Bearer ' + this.httpService.getAuthToken()
-      };
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !==null){
+      headers = headers.set('Authorization', 'Bearer ' + token);
     }
-    return this.http.put(requestUrl, form_details, { headers: headers });
-  }
+    return this.http.put(requestUrl, form_details, { headers });
+    }
+
 }

@@ -1,23 +1,23 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormControl,
-    Validators,
-} from '@angular/forms';
+import {FormBuilder,FormGroup,FormControl,Validators} from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-appointment-schedule',
-    standalone: false,
     templateUrl: './appointment-schedule.component.html',
-    styleUrls: ['./appointment-schedule.component.scss'],
+    styleUrls: ['./appointment-schedule.component.scss']
 })
 export class AppointmentScheduleComponent implements OnInit {
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    
     appointmentScheduleForm: FormGroup;
+    dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [
         'serviceName',
         'serviceDescription',
@@ -25,13 +25,15 @@ export class AppointmentScheduleComponent implements OnInit {
         'serviceTime',
         'actions',
     ];
-    dataSource: MatTableDataSource<any>;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-
-    mode = 'add';
-    selectedData: any;
+    
+    //state
     isButtonDisabled = false;
     submitted = false;
+    saveButtonLabel = 'Save';
+    mode: 'add' | 'edit' = 'add';
+    selectedData: any = null;
+    lastAddedRow: any = null;
+    lastEditedRow: any = null;
 
     constructor(
         private fb: FormBuilder,
@@ -39,108 +41,119 @@ export class AppointmentScheduleComponent implements OnInit {
         private messageService: MessageServiceService
     ) {
         this.appointmentScheduleForm = this.fb.group({
-            serviceName: new FormControl('', [Validators.required]),
-            serviceDescription: new FormControl('', [Validators.required]),
-            serviceDate: new FormControl('', [Validators.required]),
-            serviceTime: new FormControl('', [Validators.required]),
+            serviceName: ['', Validators.required],
+            serviceDescription: ['', Validators.required],
+            serviceDate: ['', Validators.required],
+            serviceTime: ['', Validators.required],
         });
 
-    // Default fallback data
-    this.dataSource = new MatTableDataSource([
-      { serviceName: 'Consultation', serviceDescription: 'Initial consult', serviceDate: '2025-07-01', serviceTime: '10:00 AM' }
-    ]);
   }
 
     ngOnInit(): void {
         this.populateData();
     }
 
-    public populateData(): void {
-        try {
-            this.appointmentScheduleService.getData().subscribe(
-                (response: any[]) => {
-                    console.log('get Data response', response);
-
-                    if (response && response.length > 0) {
-                        this.dataSource = new MatTableDataSource(response);
-                        this.dataSource.paginator = this.paginator;
-                    }
-                },
-                (error) => {
-                    console.error('Error fetching data', error);
-                    this.messageService.showError(
-                        'Failed to load appointments: ' + error
-                    );
-                }
-            );
-        } catch (error) {
-            this.messageService.showError('Action failed with error: ' + error);
-        }
-    }
-
-    onSubmit(): void {
-        try {
-            console.log('Form Submitted');
-            console.log(this.appointmentScheduleForm.value);
-
-            this.submitted = true;
-
-            if (this.appointmentScheduleForm.invalid) {
-                return;
+    populateData(): void {
+            this.appointmentScheduleService.getData().subscribe({
+            next: (response: any[]) => {
+                this.dataSource = new MatTableDataSource(response || []);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            },
+            error: (error) => {
+                this.messageService.showError('Error fetching data: ' + error.message);
             }
-
-      if (this.mode === 'add') {
-        this.appointmentScheduleService.serviceCall(this.appointmentScheduleForm.value).subscribe(response => {
-          console.log('server response:', response);
-          this.populateData(); // refresh list
-          this.messageService.showSuccess('Appointment added successfully!');
         });
-      } else if (this.mode === 'edit') {
-        this.appointmentScheduleService.editData(this.selectedData.id, this.appointmentScheduleForm.value).subscribe(response => {
-          console.log('server response for edit:', response);
-          this.populateData(); // refresh list
-          this.messageService.showSuccess('Appointment updated successfully!');
-        });
-      }
+    }
 
-            this.mode = 'add';
-            this.appointmentScheduleForm.disable();
-            this.isButtonDisabled = true;
-        } catch (error) {
-            this.messageService.showError('Action failed with error: ' + error);
+  onSubmit(): void {
+        this.submitted = true;
+        if (this.appointmentScheduleForm.invalid) return;
+
+        this.isButtonDisabled = true;
+        const formValue = this.appointmentScheduleForm.value;
+
+        if (this.mode === 'add') {
+            this.appointmentScheduleService.serviceCall(formValue).subscribe({
+                next: (response) => {
+                    this.dataSource.data = [response, ...this.dataSource.data];
+                    this.messageService.showSuccess('Saved Successfully!');
+                    this.highlightRow('add', response);
+                    this.resetFormState();
+                },
+                error: (error) => this.handleError(error)
+            });
+        } else {
+            this.appointmentScheduleService.editData(this.selectedData?.id, formValue).subscribe({
+                next: (response) => {
+                    const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
+                    if (index > -1) this.dataSource.data[index] = response;
+                    this.messageService.showSuccess('Updated Successfully!');
+                    this.highlightRow('edit', response);
+                    this.resetFormState();
+                },
+                error: (error) => this.handleError(error)
+            });
         }
     }
 
-    public resetData(): void {
+
+ editData(data: any): void {
+        this.appointmentScheduleForm.patchValue(data);
+        this.selectedData = data;
+        this.saveButtonLabel = 'Update';
+        this.mode = 'edit';
+        this.isButtonDisabled = false;
+    }
+
+    deleteData(data: any): void {
+        this.appointmentScheduleService.deleteData(data.id).subscribe({
+            next: () => {
+                this.messageService.showSuccess('Deleted Successfully!');
+                this.populateData();
+            },
+            error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+        });
+    }
+
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        this.dataSource.filter = filterValue;
+        if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+    }
+
+    refreshData(): void {
+        this.populateData();
+        this.dataSource.filter = '';
+        if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+    }
+
+    resetData(): void {
         this.appointmentScheduleForm.reset();
         this.appointmentScheduleForm.enable();
-        this.isButtonDisabled = false;
         this.submitted = false;
-    }
-
-    public editData(data: any): void {
-        this.appointmentScheduleForm.patchValue(data);
-        this.appointmentScheduleForm.enable();
-        this.mode = 'edit';
-        this.selectedData = data;
+        this.saveButtonLabel = 'Save';
+        this.mode = 'add';
         this.isButtonDisabled = false;
     }
 
-    public deleteData(data: any): void {
-        try {
-            const id = data.id;
-            this.appointmentScheduleService
-                .deleteData(id)
-                .subscribe((response) => {
-                    console.log('server response for delete:', response);
-                    this.populateData();
-                    this.messageService.showSuccess(
-                        'Appointment deleted successfully!'
-                    );
-                });
-        } catch (error) {
-            console.log(error);
-            this.messageService.showError('Delete failed: ' + error);
-        }
+    // helpers
+    private handleError(error: any): void {
+        this.messageService.showError('Action failed: ' + error.message);
+        this.isButtonDisabled = false;
     }
-}
+    
+     private highlightRow(type: 'add' | 'edit', response: any): void {
+        if (type === 'add') this.lastAddedRow = response;
+        else this.lastEditedRow = response;
+        setTimeout(() => {
+            this.lastAddedRow = null;
+            this.lastEditedRow = null;
+        }, 3000);
+        }
+    
+    private resetFormState(): void {
+        this.resetData();
+        this.isButtonDisabled = false;
+    
+    }}

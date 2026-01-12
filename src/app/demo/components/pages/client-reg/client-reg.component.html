@@ -17,7 +17,6 @@
               </mat-error>
             </mat-form-field>
           </div>
-
           <!-- Last Name -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -26,9 +25,9 @@
               <mat-error *ngIf="isInvalid('lastName','required')">Last Name is required</mat-error>
               <mat-error *ngIf="isInvalid('lastName','minlength')">Minimum 3 characters</mat-error>
               <mat-error *ngIf="isInvalid('lastName','maxlength')">Maximum 15 characters</mat-error>
+
             </mat-form-field>
           </div>
-
           <!-- Email -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -38,7 +37,6 @@
               <mat-error *ngIf="isInvalid('email','email')">Invalid email format</mat-error>
             </mat-form-field>
           </div>
-
           <!-- Phone Number -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -48,7 +46,6 @@
               <mat-error *ngIf="isInvalid('phoneNumber','pattern')">Invalid phone number</mat-error>
             </mat-form-field>
           </div>
-
           <!-- User ID -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -57,7 +54,6 @@
               <mat-error *ngIf="isInvalid('userID','required')">User ID is required</mat-error>
             </mat-form-field>
           </div>
-
           <!-- Password -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -67,7 +63,6 @@
             </mat-form-field>
           </div>
         </div>
-
         <!-- Buttons -->
         <div class="d-flex justify-content-end mt-4">
           <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
@@ -83,7 +78,9 @@
   <div class="card shadow-sm mt-5">
     <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">Client Information</h4>
+
       <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
+
         <mat-icon>refresh</mat-icon>
       </button>
     </div>
@@ -92,7 +89,9 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Filter</mat-label>
+
             <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" />
+
           </mat-form-field>
         </div>
       </div>

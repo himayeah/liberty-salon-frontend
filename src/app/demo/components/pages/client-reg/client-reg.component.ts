@@ -19,7 +19,7 @@ export class ClientRegComponent implements OnInit {
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = ['firstName', 'lastName', 'email', 'phoneNumber', 'actions'];
 
-    // state
+    // state control (Not logic)
     isButtonDisabled = false;
     submitted = false;
     saveButtonLabel = 'Save';
@@ -57,6 +57,7 @@ export class ClientRegComponent implements OnInit {
     }
 
     populateData(): void {
+        //getData() connects to service class method. 
         this.clientRegService.getData().subscribe({
             next: (response: any[]) => {
                 this.dataSource = new MatTableDataSource(response || []);
@@ -64,7 +65,7 @@ export class ClientRegComponent implements OnInit {
                 this.dataSource.sort = this.sort;
             },
             error: (error) => {
-                this.messageService.showError('Error fetching data: ' + error);
+                this.messageService.showError('Error fetching data: ' + error.message);
             }
         });
     }
@@ -87,6 +88,7 @@ export class ClientRegComponent implements OnInit {
                 error: (error) => this.handleError(error)
             });
         } else {
+            //this editData is the service Class method
             this.clientRegService.editData(this.selectedData?.id, formValue).subscribe({
                 next: (response) => {
                     const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
@@ -100,6 +102,7 @@ export class ClientRegComponent implements OnInit {
         }
     }
 
+// this editData() is the html method
     editData(data: any): void {
         this.clientRegForm.patchValue(data);
         this.selectedData = data;
@@ -115,7 +118,7 @@ export class ClientRegComponent implements OnInit {
                 this.messageService.showSuccess('Deleted Successfully!');
                 this.populateData();
             },
-            error: (error) => this.messageService.showError('Delete failed: ' + error)
+            error: (error) => this.messageService.showError('Delete failed: ' + error.message)
         });
     }
 
@@ -144,7 +147,7 @@ export class ClientRegComponent implements OnInit {
 
     // helpers
     private handleError(error: any): void {
-        this.messageService.showError('Action failed: ' + error);
+        this.messageService.showError('Action failed: ' + error.message);
         this.isButtonDisabled = false;
     }
 

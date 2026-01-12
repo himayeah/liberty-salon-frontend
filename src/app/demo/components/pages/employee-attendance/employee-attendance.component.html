@@ -1,6 +1,10 @@
-<div class="container">
-    <div class="form-section">
-        <h2 class="form-title">Employee Attendance</h2>
+<div class="container my-4">
+    <!-- Registration Form -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Employee Attendance</h4>
+      </div>
+      <div class="card-body">
         <form [formGroup]="attendanceForm" (ngSubmit)="onSubmit()">
             <div class="form-grid">
 
@@ -45,22 +49,24 @@
             </div>
         </form>
     </div>
+</div>
 
-    <div class="table-section mt-5">
-        <h2 class="form-title">Employee Information</h2>
-        <div class="refresh-filter-section">
-            <div class="refresh-button">
-                <button mat-icon-button color="primary" (click)="refreshData()">
-                    <mat-icon>refresh</mat-icon>
-                </button>
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Client Information</h4>
+            <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Filter</mat-label>
+                  <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" />
+                </mat-form-field>
+              </div>
             </div>
-            <br>
-
-            <mat-form-field class="filter">
-                <mat-label>Filter</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-            </mat-form-field>
-        </div>
 
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 

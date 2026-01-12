@@ -89,6 +89,28 @@ const navigationModel = [
         ],
     },
 
+      {
+        label: 'Master Data',
+        isVisible: false,
+        auth: authenticationEnum.Home,
+        items: [
+            {
+                label: 'Service Categories',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-sitemap', // service categories
+                routerLink: ['/pages/service-category'],
+            },
+            {
+                label: 'Services',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-wrench', // services
+                routerLink: ['/pages/service'],
+            },
+        ],
+    },
+
     {
         label: 'UI Components',
         isVisible:true ,
