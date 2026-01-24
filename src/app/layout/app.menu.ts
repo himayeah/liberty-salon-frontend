@@ -51,6 +51,20 @@ const navigationModel = [
                 routerLink: ['/pages/employee-attendance'],
             },
             {
+                label: 'Employee Schedule',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-calendar', // attendance/time
+                routerLink: ['/pages/employee-schedule'],
+            },
+            {
+                label: 'Employee Leave',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-moon', // attendance/time
+                routerLink: ['/pages/employee-leave'],
+            },
+            {
                 label: 'Stylist Task Management',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,

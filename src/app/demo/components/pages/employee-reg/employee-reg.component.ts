@@ -1,19 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import {FormBuilder,FormGroup,FormControl,AbstractControl} from '@angular/forms';
+import {FormBuilder,FormGroup,FormControl,AbstractControl, Validators} from '@angular/forms';
+
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
+import { ServiceService } from 'src/app/services/service/service.service';
 
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    symbol: string;
-}
 
 @Component({
     selector: 'app-employee-reg',
@@ -28,15 +23,18 @@ export class EmployeeRegComponent implements OnInit {
     employeeRegForm: FormGroup;
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [
-        'firstName',
-        'lastName',
-        'fullName',
-        'age',
-        'email',
-        'phoneNumber',
-        'bloodType',
-        'actions',
+        'employeeName',
+        'dateJoined',
+        'designation',
+        'specializations',
+        'hourlyRate',
+        'commissionRate',
+        'weeklyOffDays',
+        'maxAppointmentsPerDay',
+        'actions'
     ];
+
+    services: any[] = [];
 
     // state
     isButtonDisabled = false;
@@ -51,57 +49,49 @@ export class EmployeeRegComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private employeeRegService: EmployeeRegServicesService,
-        private messageService: MessageServiceService
+        private messageService: MessageServiceService,
+        private serviceService: ServiceService
     ) {
         this.employeeRegForm = this.fb.group({
-            firstName: new FormControl('', [Validators.required]),
-            lastName: new FormControl('', [
-                Validators.required,
-                Validators.minLength(3),
-                Validators.maxLength(15),
-            ]),
-            fullName: new FormControl('', [Validators.required]),
-            age: new FormControl('', [
-                Validators.required,
-                Validators.min(18),
-                Validators.max(40),
-                this.customAgeValidator,
-            ]),
-            email: new FormControl('', [
-                Validators.required,
-                Validators.pattern(
-                    '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
-                ),
-            ]), // <- we can use this [ Validators.email ]
-            phoneNumber: new FormControl('', [
-                Validators.required,
-                Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$'),
-            ]),
-            bloodType: new FormControl('', [Validators.required]),
+            employeeName: new FormControl('', [Validators.required]),
+            dateJoined: new FormControl('', [Validators.required]),
+            designation: new FormControl('', [Validators.required]),
+            specializations: new FormControl({ value: '', disabled: true }), // Initially disabled
+            hourlyRate: new FormControl('', [Validators.required, Validators.min(0.01)]),
+            commissionRate: new FormControl('', [Validators.required, Validators.min(0), Validators.max(100)]),
+            weeklyOffDays: new FormControl('', [Validators.required]),
+            maxAppointmentsPerDay: new FormControl('', [Validators.required]),
+        });
+
+        // Listen for changes in designation to enable/disable specializations
+        this.employeeRegForm.get('designation')?.valueChanges.subscribe(designation => {
+            const specializationsControl = this.employeeRegForm.get('specializations');
+            if (designation === 'Bridal stylist' || designation === 'Groom stylist') {
+                specializationsControl?.enable();
+                specializationsControl?.setValidators(Validators.required);
+            } else {
+                specializationsControl?.disable();
+                specializationsControl?.clearValidators();
+                specializationsControl?.setValue('');
+            }
+            specializationsControl?.updateValueAndValidity();
         });
     }
 
     ngOnInit(): void {
         this.populateData();
+        this.fetchServices();
     }
 
-    customAgeValidator(control: AbstractControl) {
-        if (!control) {
-            return null;
-        }
-
-        const controlValue = +control.value;
-
-        if (isNaN(controlValue)) {
-            return { customAgeValidator: true };
-        }
-
-        if (!Number.isInteger) {
-            return {
-                customAgeValidator: true,
+    fetchServices(): void {
+        this.serviceService.getData().subscribe({
+            next: (response: any) => {
+                this.services = response;
+            },
+            error: (error) => {
+                this.messageService.showError('Error fetching services: ' + error.message);
             }
-        }
-        return null;
+        });
     }
 
     populateData(): void {
@@ -117,7 +107,7 @@ export class EmployeeRegComponent implements OnInit {
         });
     }
 
-onSubmit(): void {
+    onSubmit(): void {
         this.submitted = true;
         if (this.employeeRegForm.invalid) return;
 
@@ -149,7 +139,10 @@ onSubmit(): void {
     }
 
     editData(data: any): void {
-        this.employeeRegForm.patchValue(data);
+        this.employeeRegForm.patchValue({
+            ...data,
+            specializations: data.specializations ? data.specializations.map((s: any) => s.id) : []
+        });
         this.selectedData = data;
         this.saveButtonLabel = 'Update';
         this.mode = 'edit';
@@ -188,6 +181,7 @@ onSubmit(): void {
         this.mode = 'add';
         this.selectedRow = null;
         this.isButtonDisabled = false;
+        this.employeeRegForm.get('specializations')?.disable(); // Re-disable after reset
     }
 
     // helpers
