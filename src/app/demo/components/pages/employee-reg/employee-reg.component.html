@@ -5,113 +5,122 @@
     </div>
     <div class="card-body">
       <form [formGroup]="employeeRegForm" (ngSubmit)="onSubmit()">
-        <div class="form-grid">
-          <mat-form-field class="full-width">
-            <mat-label>First Name</mat-label>
-            <input matInput placeholder="Enter First Name" formControlName="firstName" />
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('firstName') && employeeRegForm.get('firstName').touched && employeeRegForm.get('firstName').errors && employeeRegForm.get('firstName').errors['required']">
-              Enter your First Name
-            </span>
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <mat-label>Last Name</mat-label>
-            <input matInput placeholder="Enter last name" formControlName="lastName" />
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('lastName') && employeeRegForm.get('lastName').touched && employeeRegForm.get('lastName').errors && employeeRegForm.get('lastName').errors['required']">
-              Enter your Last Name
-            </span>
-            <span class="text-danger"
-              *ngIf="(employeeRegForm.get('lastName') && employeeRegForm.get('lastName').touched || submitted) && employeeRegForm.get('lastName').errors && employeeRegForm.get('lastName').errors['minlength']">
-              minimum length for last name is 3 characters
-            </span>
-            <span class="text-danger"
-              *ngIf="(employeeRegForm.get('lastName') && employeeRegForm.get('lastName').touched || submitted) && employeeRegForm.get('lastName').errors && employeeRegForm.get('lastName').errors['maxlength']">
-              maximum length for last name is 15 characters only
-            </span>
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <mat-label>Full Name</mat-label>
-            <input matInput placeholder="Enter full Name" formControlName="fullName" />
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('fullName') && employeeRegForm.get('fullName').touched && employeeRegForm.get('fullName').errors && employeeRegForm.get('fullName').errors['required']">
-              Enter your Full Name
-            </span>
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <mat-label>Age</mat-label>
-            <input matInput placeholder="Enter age" formControlName="age" />
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('age') && employeeRegForm.get('age').touched && employeeRegForm.get('age').errors && employeeRegForm.get('age').errors['required']">
-              Enter your Age
-            </span>
-            <span class="text-danger"
-              *ngIf="(employeeRegForm.get('age') && employeeRegForm.get('age').touched || submitted) && employeeRegForm.get('age').errors && employeeRegForm.get('age').errors['min']">
-              age must be greater than 18
-            </span>
-            <span class="text-danger"
-              *ngIf="(employeeRegForm.get('age') && employeeRegForm.get('age').touched || submitted) && employeeRegForm.get('age').errors && employeeRegForm.get('age').errors['max']">
-              age must be less than 40
-            </span>
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <mat-label>Email</mat-label>
-            <input matInput placeholder="Enter email" formControlName="email" />
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('email') && employeeRegForm.get('email').touched && employeeRegForm.get('email').errors && employeeRegForm.get('email').errors['required']">
-              Enter your Email
-            </span>
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <mat-label>Phone Number</mat-label>
-            <input matInput placeholder="Enter phone Number" formControlName="phoneNumber" />
-            <span class="text-danger"
-              *ngIf="(employeeRegForm.get('phoneNumber') && employeeRegForm.get('phoneNumber').touched || submitted) && employeeRegForm.get('phoneNumber').errors && employeeRegForm.get('phoneNumber').errors['pattern']">
-              please enter valid phone number
-            </span>
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('phoneNumber') && employeeRegForm.get('phoneNumber').touched && employeeRegForm.get('phoneNumber').errors && employeeRegForm.get('phoneNumber').errors['required']">
-              Enter your phone number
-            </span>
-          </mat-form-field>
-          <!-- <mat-form-field class="full-width">
-          <mat-label>Blood Type</mat-label>
-          <input matInput placeholder="Enter Blood Type" formControlName="bloodType" />
-          <span class="text-danger"
-            *ngIf="employeeRegForm.get('bloodType') && employeeRegForm.get('bloodType').touched && employeeRegForm.get('bloodType').errors && employeeRegForm.get('bloodType').errors['required']">
-            Enter your blood type
-          </span>
-        </mat-form-field> -->
+        <div class="row g-3">
 
-          <mat-form-field class="full-width">
-            <mat-label>Blood Type</mat-label>
-            <mat-select formControlName="bloodType">
-              <mat-option value="A+">A+</mat-option>
-              <mat-option value="A-">A-</mat-option>
-              <mat-option value="B+">B+</mat-option>
-              <mat-option value="B-">B-</mat-option>
-              <mat-option value="O+">O+</mat-option>
-              <mat-option value="O-">O-</mat-option>
-              <mat-option value="AB+">AB+</mat-option>
-              <mat-option value="AB-">AB-</mat-option>
-            </mat-select>
-            <span class="text-danger"
-              *ngIf="employeeRegForm.get('bloodType') && employeeRegForm.get('bloodType').touched && employeeRegForm.get('bloodType').errors && employeeRegForm.get('bloodType').errors['required']">
-              Enter your blood type
-            </span>
-          </mat-form-field>
+          <!--Employee Name-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Employee Name</mat-label>
+              <input matInput formControlName="employeeName" placeholder="Employee Name">
+              <mat-error *ngIf="submitted && employeeRegForm.get('employeeName')?.hasError('required')">
+                Employee Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Date Joined-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date Joined</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dateJoined" placeholder="Date Joined">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="submitted && employeeRegForm.get('dateJoined')?.hasError('required')">
+                    Date Joined is required
+                </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Designation-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Designation</mat-label>
+              <mat-select formControlName="designation">
+                <mat-option value="Bridal stylist">Bridal stylist</mat-option>
+                <mat-option value="Groom stylist">Groom stylist</mat-option>
+              </mat-select>
+              <mat-error *ngIf="submitted && employeeRegForm.get('designation')?.hasError('required')">
+                Designation is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Specializations-->
+          <div class="col-md-4" *ngIf="employeeRegForm.get('designation')?.value === 'Bridal stylist' || employeeRegForm.get('designation')?.value === 'Groom stylist'">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Specializations</mat-label>
+              <mat-select formControlName="specializations" multiple>
+                <mat-option *ngFor="let service of services" [value]="service.id">{{service.serviceName}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="submitted && employeeRegForm.get('specializations')?.hasError('required')">
+                Specializations are required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Hourly Rate-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Hourly Rate</mat-label>
+              <input matInput type="number" formControlName="hourlyRate" placeholder="Hourly Rate">
+              <mat-error *ngIf="submitted && employeeRegForm.get('hourlyRate')?.hasError('required')">
+                Hourly Rate is required
+              </mat-error>
+              <mat-error *ngIf="submitted && employeeRegForm.get('hourlyRate')?.hasError('min')">
+                Hourly Rate must be positive
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Commission Rate-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Commission Rate</mat-label>
+              <input matInput type="number" formControlName="commissionRate" placeholder="Commission Rate">
+              <span matTextSuffix>%</span>
+              <mat-error *ngIf="submitted && employeeRegForm.get('commissionRate')?.hasError('required')">
+                Commission Rate is required
+              </mat-error>
+              <mat-error *ngIf="submitted && (employeeRegForm.get('commissionRate')?.hasError('min') || employeeRegForm.get('commissionRate')?.hasError('max'))">
+                Commission Rate must be between 0 and 100
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Weekly Off Days-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Weekly Off Days</mat-label>
+              <input matInput type="number" formControlName="weeklyOffDays" placeholder="Weekly Off Days">
+              <mat-error *ngIf="submitted && employeeRegForm.get('weeklyOffDays')?.hasError('required')">
+                Weekly Off Days is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!--Max Appointments Per Day-->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Max Appointments Per Day</mat-label>
+              <input matInput type="number" formControlName="maxAppointmentsPerDay" placeholder="Max Appointments Per Day">
+              <mat-error *ngIf="submitted && employeeRegForm.get('maxAppointmentsPerDay')?.hasError('required')">
+                Max Appointments Per Day is required
+              </mat-error>
+            </mat-form-field>
+          </div>
 
         </div>
-        <div class="button-group">
-          <button type="submit" mat-raised-button color="primary" class="form-button" [disabled]="isButtonDisabled">{{
-            saveButtonLabel }}</button>
-          <button type="reset" mat-raised-button color="secondary" class="form-button"
-            (click)="resetData()">Reset</button>
+
+       <!--Buttons-->
+       <div class="d-flex justify-content-end mt-4">
+          <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">{{saveButtonLabel}}</button>
+          <button type="button" mat-stroked-button class="ms-2" (click)="resetData()">Reset</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!--Table Section-->
   <div class="card shadow-sm mt-5">
     <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">Employee Information</h4>
@@ -124,55 +133,83 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Filter</mat-label>
+
             <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" />
           </mat-form-field>
+
         </div>
       </div>
+       <div class="table-responsive">
+       <table mat-table [dataSource]="dataSource" matSort class="table table-hover align-middle">
 
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <ng-container matColumnDef="firstName">
-          <th mat-header-cell *matHeaderCellDef> First Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+        <!-- Employee Name Column -->
+        <ng-container matColumnDef="employeeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Employee Name </th>
+            <td mat-cell *matCellDef="let element">{{element.employeeName}}</td>
         </ng-container>
-        <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef> Last Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+
+        <!-- Date Joined Column -->
+        <ng-container matColumnDef="dateJoined">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Joined </th>
+            <td mat-cell *matCellDef="let element">{{element.dateJoined | date:'mediumDate'}}</td>
         </ng-container>
-        <ng-container matColumnDef="fullName">
-          <th mat-header-cell *matHeaderCellDef> Full Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.fullName}} </td>
+        
+        <!-- Designation Column -->
+        <ng-container matColumnDef="designation">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Designation </th>
+            <td mat-cell *matCellDef="let element">{{element.designation}}</td>
         </ng-container>
-        <ng-container matColumnDef="age">
-          <th mat-header-cell *matHeaderCellDef> Age </th>
-          <td mat-cell *matCellDef="let element"> {{element.age}} </td>
+
+        <!-- Specializations Column -->
+        <ng-container matColumnDef="specializations">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Specializations </th>
+            <td mat-cell *matCellDef="let element">{{element.specializations}}</td>
         </ng-container>
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email </th>
-          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+
+        <!-- Hourly Rate Column -->
+        <ng-container matColumnDef="hourlyRate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Hourly Rate </th>
+            <td mat-cell *matCellDef="let element">{{element.hourlyRate | currency}}</td>
         </ng-container>
-        <ng-container matColumnDef="phoneNumber">
-          <th mat-header-cell *matHeaderCellDef> Phone Number </th>
-          <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
+
+        <!-- Commission Rate Column -->
+        <ng-container matColumnDef="commissionRate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Commission Rate </th>
+            <td mat-cell *matCellDef="let element">{{element.commissionRate / 100 | percent}}</td>
         </ng-container>
-        <ng-container matColumnDef="bloodType">
-          <th mat-header-cell *matHeaderCellDef> Blood Type </th>
-          <td mat-cell *matCellDef="let element"> {{element.bloodType}} </td>
+
+        <!-- Weekly Off Days Column -->
+        <ng-container matColumnDef="weeklyOffDays">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Weekly Off Days </th>
+            <td mat-cell *matCellDef="let element">{{element.weeklyOffDays}}</td>
         </ng-container>
+
+        <!-- Max Appointments Per Day Column -->
+        <ng-container matColumnDef="maxAppointmentsPerDay">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Max Appointments Per Day </th>
+            <td mat-cell *matCellDef="let element">{{element.maxAppointmentsPerDay}}</td>
+        </ng-container>
+
+        <!-- Actions Column -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions </th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="edit">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="delete">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
         </ng-container>
+
+        <!--Rows-->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'highlight-row': selectedRow && selectedRow.id === row.id,
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+        [ngClass]="{'highlight-row': selectedRow && selectedRow.id === row.id,
           'last-added-row': lastAddedRow && lastAddedRow.id === row.id,
-          'last-edited-row': lastEditedRow && lastEditedRow.id === row.id}"></tr>
+          'last-edited-row': lastEditedRow && lastEditedRow.id === row.id}">
+        </tr>
       </table>
       <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
         aria-label="Select page of periodic elements">

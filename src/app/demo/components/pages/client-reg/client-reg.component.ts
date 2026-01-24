@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 
 @Component({
     selector: 'app-client-reg',
@@ -17,7 +18,9 @@ export class ClientRegComponent implements OnInit {
 
     clientRegForm: FormGroup;
     dataSource = new MatTableDataSource<any>([]);
-    displayedColumns: string[] = ['firstName', 'lastName', 'email', 'phoneNumber', 'actions'];
+    displayedColumns: string[] = ['firstName', 'lastName', 'email', 'phoneNumber', 'dateOfBirth', 'gender', 'preferredStylist', 'allergies', 'totalVisits', 'lastVisitedDate', 'lifetimeValue', 'actions'];
+
+    stylists: any[] = [];
 
     // state control (Not logic)
     isButtonDisabled = false;
@@ -32,20 +35,37 @@ export class ClientRegComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private clientRegService: ClientRegServiceService,
-        private messageService: MessageServiceService
+        private messageService: MessageServiceService,
+        private employeeRegService: EmployeeRegServicesService
     ) {
         this.clientRegForm = this.fb.group({
             firstName: ['', Validators.required],
             lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]],
             email: ['', [Validators.required, Validators.email]],
             phoneNumber: ['', [Validators.required, Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$')]],
-            userID: ['', Validators.required],
-            password: ['', Validators.required],
+            dateOfBirth: ['', Validators.required],
+            gender: ['', Validators.required],
+            preferredStylist: [''],
+            allergies: [''], // Allergies field, not required
         });
     }
 
     ngOnInit(): void {
         this.populateData();
+        this.fetchStylists();
+    }
+
+    fetchStylists(): void {
+        this.employeeRegService.getData().subscribe({
+            next: (response: any[]) => {
+                this.stylists = response.filter(employee => 
+                    employee.designation === 'Bridal stylist' || employee.designation === 'Groom stylist'
+                );
+            },
+            error: (error) => {
+                this.messageService.showError('Error fetching stylists: ' + error.message);
+            }
+        });
     }
 
     // convenience getter
@@ -104,7 +124,10 @@ export class ClientRegComponent implements OnInit {
 
 // this editData() is the html method
     editData(data: any): void {
-        this.clientRegForm.patchValue(data);
+        this.clientRegForm.patchValue({
+            ...data,
+            preferredStylist: data.preferredStylist ? data.preferredStylist.id : null
+        });
         this.selectedData = data;
         this.saveButtonLabel = 'Update';
         this.mode = 'edit';

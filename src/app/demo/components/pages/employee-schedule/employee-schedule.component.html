@@ -1,0 +1,183 @@
+<div class="container my-4">
+    <!--Employee Schedule Form-->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Employee Schedule</h4>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="employeeScheduleForm" (ngSubmit)="onSubmit()">
+
+
+            <!--Employee Name-->
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Employee Name</mat-label>
+                    <mat-select formControlName="employeeId">
+                        <mat-option *ngFor="let employee of employees" [value]="employee.id">
+                            {{ employee.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="submitted && employeeScheduleForm.get('employeeId')?.hasError('required')">
+                        Employee is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Day of the week-->
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Work Day</mat-label>
+                            <input matInput type="number" formControlName="workDay" min="0" placeholder="0" />
+                            <mat-error *ngIf="isInvalid('workDay','min')">Work day must be between 0 and 6</mat-error>
+                    </mat-form-field>
+                </div>
+
+            <!--Is the Employee Active on the Day?-->
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-checkbox formControlName="isActive" color="primary">Is the Employee Active?</mat-checkbox>
+            </div>
+
+            <!--Shift Start Time-->
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Shift Start Time</mat-label>
+                    <input matInput type="time" formControlName="startTime" />
+                    <mat-error *ngIf="submitted && employeeScheduleForm.get('startTime')?.hasError('required')">
+                        Shift Start Time is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Shift End Time-->
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Shift End Time</mat-label>
+                    <input matInput type="time" formControlName="endTime" />
+                    <mat-error *ngIf="submitted && employeeScheduleForm.get('endTime')?.hasError('required')">
+                        Shift End Time is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Effective Date-->
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Effective Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="effectiveDate" placeholder="Choose Effective Date"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="submitted && employeeScheduleForm.get('effectiveDate')?.hasError('required')">
+                        Effective Date is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--End Date-->
+            <div class="col-md-4">
+             <mat-form-field appearance="outline" class="w-100">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" placeholder="Choose End Date"/>
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+             <!--Buttons-->
+                <div class="d-flex justify-content-end mt-4">
+                <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
+                    {{ saveButtonLabel }}
+                </button>
+                <button type="button" mat-stroked-button class="ms-2" (click)="resetData()">Reset</button>
+                </div>
+            </form>     
+    </div>
+
+    <!--Table Section-->
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Employee Information</h4>
+            <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Filter</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Search by any field" />
+                    </mat-form-field>
+                </div>
+        </div>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-100">
+                <!-- Employee Name Column -->
+                <ng-container matColumnDef="employeeName">
+                    <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.employeeName}} </td>
+                </ng-container>
+
+                <!--Day of the week-->
+                <ng-container matColumnDef="workDay">
+                    <th mat-header-cell *matHeaderCellDef> Work Day </th>
+                    <td mat-cell *matCellDef="let element"> {{element.workDay}} </td>
+                </ng-container>
+
+                <!--Is the Employee Active on the Day?-->
+                <ng-container matColumnDef="isActive">
+                    <th mat-header-cell *matHeaderCellDef> Is Active? </th>
+                    <td mat-cell *matCellDef="let element"> {{element.isActive}} </td>
+                </ng-container>
+
+                <!--Start Time Column -->
+                <ng-container matColumnDef="startTime">
+                    <th mat-header-cell *matHeaderCellDef> Start Time </th>
+                    <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+                </ng-container>
+
+                <!--End Time Column -->
+                <ng-container matColumnDef="endTime">
+                    <th mat-header-cell *matHeaderCellDef> End Time </th>
+                    <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+                </ng-container>
+
+                <!--Effective Date Column -->
+                <ng-container matColumnDef="effectiveDate">
+                    <th mat-header-cell *matHeaderCellDef> Effective Date </th>
+                    <td mat-cell *matCellDef="let element"> {{element.effectiveDate | date:'mediumDate'}} </td>
+                </ng-container>
+
+                <!--End Date Column -->
+                <ng-container matColumnDef="endDate">
+                    <th mat-header-cell *matHeaderCellDef> End Date </th>
+                    <td mat-cell *matCellDef="let element"> {{element.endDate | date:'mediumDate'}} </td>
+                </ng-container>
+
+                <!--Action-->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="primary" (click)="editSchedule(element)" matTooltip="Edit Schedule">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="deleteSchedule(element)" matTooltip="Delete Schedule">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!--Rows-->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="{
+                    'table-primary': selectedRow?.id === row.id,
+                    'table-success' : lastAddedRow?.id === row.id,
+                    'table-warning' : lastEditedRow?.id === row.id
+                    }">
+                </tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>

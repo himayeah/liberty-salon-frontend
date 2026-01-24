@@ -18,12 +18,13 @@ import {EmployeeRegComponent} from './employee-reg/employee-reg.component';
 import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {EmployeeAttendanceComponent} from './employee-attendance/employee-attendance.component';
 import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
 import { MatSelectModule } from '@angular/material/select';
 import { InventoryComponent } from './inventory/inventory.component';
 import { ServiceCategoryComponent } from './service-category/service-category.component';
 import { ServiceComponent } from './service/service.component';
+import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule.component';
+import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 
 
 @NgModule({
@@ -31,11 +32,12 @@ import { ServiceComponent } from './service/service.component';
     ClientRegComponent,
     EmployeeRegComponent,
     AppointmentScheduleComponent,
-    EmployeeAttendanceComponent,
     StylistTaskManagementComponent,
     InventoryComponent,
     ServiceCategoryComponent,
-    ServiceComponent
+    ServiceComponent,
+    EmployeeScheduleComponent,
+    EmployeeLeaveComponent
   ],
 
     imports: [
